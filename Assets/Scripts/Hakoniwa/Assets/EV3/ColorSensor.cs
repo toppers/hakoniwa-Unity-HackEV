@@ -4,7 +4,7 @@ using UnityEngine;
 
 using Hakoniwa.Assets;
 
-namespace Hakoniwa.Assets.HackEV
+namespace Hakoniwa.Assets.EV3
 {
     public class ColorSensor : MonoBehaviour, IRobotColorSensor
     {
