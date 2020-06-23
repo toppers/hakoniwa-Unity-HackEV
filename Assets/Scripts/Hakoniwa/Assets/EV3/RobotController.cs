@@ -23,7 +23,7 @@ namespace Hakoniwa.Assets.EV3
         private Hakoniwa.Assets.IRobotUltraSonicSensor ultrasonicSensor;
         private bool isConnected;
         private ulong micon_simtime;
-        private Hakoniwa.Assets.HackEV.HackEVParts parts;
+        private IEV3Parts parts;
 
         IoWriter writer;
         IoReader reader;
@@ -46,8 +46,7 @@ namespace Hakoniwa.Assets.EV3
         {
             this.root = GameObject.Find("Robot");
             this.myObject = GameObject.Find("Robot/" + this.transform.name);
-            GameObject hakoniwa = GameObject.Find("Hakoniwa");
-            this.parts = hakoniwa.GetComponentInChildren<Hakoniwa.Assets.HackEV.HackEVParts>();
+            this.parts = myObject.GetComponentInChildren<Hakoniwa.Assets.EV3.IEV3Parts>();
 
             this.isConnected = false;
             this.InitActuator();
@@ -67,12 +66,12 @@ namespace Hakoniwa.Assets.EV3
 
         private void InitActuator()
         {
-            GameObject obj = root.transform.Find(this.transform.name + "/" + this.parts.motor_a).gameObject;
+            GameObject obj = root.transform.Find(this.transform.name + "/" + this.parts.GetMotorA()).gameObject;
             this.motor_a = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotor>();
             motor_a.Initialize(obj);
             this.motor_a_sensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotorSensor>();
 
-            obj = root.transform.Find(this.transform.name + "/" + this.parts.motor_b).gameObject;
+            obj = root.transform.Find(this.transform.name + "/" + this.parts.GetMotorB()).gameObject;
             this.motor_b = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotor>();
             motor_b.Initialize(obj);
             this.motor_b_sensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotorSensor>();
@@ -83,11 +82,11 @@ namespace Hakoniwa.Assets.EV3
         private void InitSensor()
         {
             GameObject obj;
-            obj = root.transform.Find(this.transform.name + "/" + this.parts.color_sensor).gameObject;
+            obj = root.transform.Find(this.transform.name + "/" + this.parts.GetColorSensor()).gameObject;
             colorSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotColorSensor>();
             colorSensor.Initialize(obj);
 
-            obj = root.transform.Find(this.transform.name + "/" + this.parts.ultra_sonic_sensor).gameObject;
+            obj = root.transform.Find(this.transform.name + "/" + this.parts.getUltraSonicSensor()).gameObject;
             ultrasonicSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotUltraSonicSensor>();
             ultrasonicSensor.Initialize(obj);
         }
