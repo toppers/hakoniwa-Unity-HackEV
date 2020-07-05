@@ -88,13 +88,13 @@ public class UdpCommServer
         }
         if (tmp_buf[5] != this.packet_ext_off)
         {
-            Debug.LogError("udp msg invalid ext_off:" + packet_version);
-            return false; //version
+            Debug.LogError("udp msg invalid ext_off:" + packet_ext_off);
+            return false; //ext_off
         }
         if (tmp_buf[6] != this.packet_ext_size)
         {
-            Debug.LogError("udp msg invalid ext_size:" + packet_version);
-            return false; //version
+            Debug.LogError("udp msg invalid ext_size:" + packet_ext_size);
+            return false; //ext_size
         }
         return true;
     }
