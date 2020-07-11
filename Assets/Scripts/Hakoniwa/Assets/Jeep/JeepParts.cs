@@ -42,5 +42,10 @@ namespace Hakoniwa.Assets.Jeep
         {
             throw null;
         }
+
+        public string GetMotorC()
+        {
+            throw null;
+        }
     }
 }

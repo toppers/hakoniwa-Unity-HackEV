@@ -39,7 +39,12 @@ namespace Hakoniwa.Assets.HackEV
 
         public string getGyroSensor()
         {
-            throw null;
+            return null;
+        }
+
+        public string GetMotorC()
+        {
+            return null;
         }
     }
 }
