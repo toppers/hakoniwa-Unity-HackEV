@@ -21,6 +21,7 @@ namespace Hakoniwa.Assets.EV3
         private Hakoniwa.Assets.IRobotMotorSensor motor_b_sensor;
         private Hakoniwa.Assets.IRobotColorSensor colorSensor;
         private Hakoniwa.Assets.IRobotUltraSonicSensor ultrasonicSensor;
+        private Hakoniwa.Assets.IRobotTouchSensor touchSensor;
         private bool isConnected;
         private ulong micon_simtime;
         private IEV3Parts parts;
@@ -89,6 +90,13 @@ namespace Hakoniwa.Assets.EV3
             obj = root.transform.Find(this.transform.name + "/" + this.parts.getUltraSonicSensor()).gameObject;
             ultrasonicSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotUltraSonicSensor>();
             ultrasonicSensor.Initialize(obj);
+
+            obj = root.transform.Find(this.transform.name + "/" + this.parts.getTouchSensor()).gameObject;
+            if (obj != null)
+            {
+                touchSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotTouchSensor>();
+                touchSensor.Initialize(obj);
+            }
         }
         private void UpdateSensor()
         {
@@ -100,6 +108,19 @@ namespace Hakoniwa.Assets.EV3
 
             colorSensor.UpdateSensorValues();
             ultrasonicSensor.UpdateSensorValues();
+            if (touchSensor != null)
+            {
+                touchSensor.UpdateSensorValues();
+                if (this.touchSensor.IsPressed())
+                {
+                    //Debug.Log("Touched:");
+                    this.writer.Set("touch_sensor", 4095);
+                }
+                else
+                {
+                    this.writer.Set("touch_sensor", 0);
+                }
+            }
 
             this.writer.Set("sensor_ultrasonic", (int)(this.ultrasonicSensor.GetDistanceValue() * 10));
             this.writer.Set("sensor_reflect", (int)(this.colorSensor.GetLightValue() * 100f));

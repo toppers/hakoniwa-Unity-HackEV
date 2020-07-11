@@ -10,5 +10,6 @@ namespace Hakoniwa.Assets.EV3
         string GetMotorB();
         string GetColorSensor();
         string getUltraSonicSensor();
+        string getTouchSensor();
     }
 }

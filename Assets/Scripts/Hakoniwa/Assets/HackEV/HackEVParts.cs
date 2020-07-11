@@ -32,5 +32,9 @@ namespace Hakoniwa.Assets.HackEV
         {
             return ultra_sonic_sensor;
         }
+        public string getTouchSensor()
+        {
+            return null;
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace Hakoniwa.Assets.SimpleRobot
         private string motor_b = "Tire2";
         private string color_sensor = "Axle/SensorHolder/SensorBox/ColorSensor";
         private string ultra_sonic_sensor = "Axle/SensorHolder/SensorBox/UltrasonicSensor";
+        private string touch_sensor = "Axle/TouchSensor";
 
         public string GetColorSensor()
         {
@@ -32,6 +33,10 @@ namespace Hakoniwa.Assets.SimpleRobot
         public string getUltraSonicSensor()
         {
             return ultra_sonic_sensor;
+        }
+        public string getTouchSensor()
+        {
+            return touch_sensor;
         }
     }
 }
