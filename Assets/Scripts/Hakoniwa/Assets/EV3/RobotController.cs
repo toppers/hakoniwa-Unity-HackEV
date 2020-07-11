@@ -22,6 +22,7 @@ namespace Hakoniwa.Assets.EV3
         private Hakoniwa.Assets.IRobotColorSensor colorSensor;
         private Hakoniwa.Assets.IRobotUltraSonicSensor ultrasonicSensor;
         private Hakoniwa.Assets.IRobotTouchSensor touchSensor;
+        private Hakoniwa.Assets.IRobotGyroSensor gyroSensor;
         private bool isConnected;
         private ulong micon_simtime;
         private IEV3Parts parts;
@@ -97,6 +98,12 @@ namespace Hakoniwa.Assets.EV3
                 touchSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotTouchSensor>();
                 touchSensor.Initialize(obj);
             }
+            obj = root.transform.Find(this.transform.name + "/" + this.parts.getGyroSensor()).gameObject;
+            if (obj != null)
+            {
+                gyroSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotGyroSensor>();
+                gyroSensor.Initialize(obj);
+            }
         }
         private void UpdateSensor()
         {
@@ -120,6 +127,12 @@ namespace Hakoniwa.Assets.EV3
                 {
                     this.writer.Set("touch_sensor", 0);
                 }
+            }
+            if (gyroSensor != null)
+            {
+                gyroSensor.UpdateSensorValues();
+                this.writer.Set("gyro_degree", (int)gyroSensor.GetDegree());
+                this.writer.Set("gyro_degree_rate", (int)gyroSensor.GetDegreeRate());
             }
 
             this.writer.Set("sensor_ultrasonic", (int)(this.ultrasonicSensor.GetDistanceValue() * 10));
@@ -156,6 +169,12 @@ namespace Hakoniwa.Assets.EV3
             {
                 this.motor_b_sensor.ClearDegree();
                 Debug.Log("reset tire2");
+            }
+            this.reader.RefData("gyro_reset", out reset);
+            if ((this.gyroSensor != null) && (reset != 0))
+            {
+                this.gyroSensor.ClearDegree();
+                Debug.Log("reset gyro");
             }
         }
 

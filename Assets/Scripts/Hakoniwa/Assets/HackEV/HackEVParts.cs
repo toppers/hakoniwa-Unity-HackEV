@@ -36,5 +36,10 @@ namespace Hakoniwa.Assets.HackEV
         {
             return null;
         }
+
+        public string getGyroSensor()
+        {
+            throw null;
+        }
     }
 }

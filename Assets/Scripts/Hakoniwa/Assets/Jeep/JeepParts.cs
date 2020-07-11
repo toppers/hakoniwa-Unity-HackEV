@@ -37,5 +37,10 @@ namespace Hakoniwa.Assets.Jeep
         {
             return null;
         }
+
+        public string getGyroSensor()
+        {
+            throw null;
+        }
     }
 }
