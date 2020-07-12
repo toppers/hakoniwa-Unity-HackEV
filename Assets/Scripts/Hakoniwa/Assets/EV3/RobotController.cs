@@ -82,9 +82,10 @@ namespace Hakoniwa.Assets.EV3
             motor_b.Initialize(obj);
             this.motor_b_sensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotorSensor>();
 
-            obj = root.transform.Find(this.transform.name + "/" + this.parts.GetMotorC()).gameObject;
-            if (obj != null)
+            string parts = this.parts.GetMotorC();
+            if (parts != null)
             {
+                obj = root.transform.Find(this.transform.name + "/" + this.parts.GetMotorC()).gameObject;
                 this.motor_arm = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotor>();
                 motor_arm.Initialize(obj);
                 this.motor_arm_sensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotorSensor>();
@@ -106,15 +107,17 @@ namespace Hakoniwa.Assets.EV3
             ultrasonicSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotUltraSonicSensor>();
             ultrasonicSensor.Initialize(obj);
 
-            obj = root.transform.Find(this.transform.name + "/" + this.parts.getTouchSensor()).gameObject;
-            if (obj != null)
+            string parts = this.parts.getTouchSensor();
+            if (parts != null)
             {
+                obj = root.transform.Find(this.transform.name + "/" + this.parts.getTouchSensor()).gameObject;
                 touchSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotTouchSensor>();
                 touchSensor.Initialize(obj);
             }
-            obj = root.transform.Find(this.transform.name + "/" + this.parts.getGyroSensor()).gameObject;
-            if (obj != null)
+            parts = this.parts.getGyroSensor();
+            if (parts != null)
             {
+                obj = root.transform.Find(this.transform.name + "/" + this.parts.getGyroSensor()).gameObject;
                 gyroSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotGyroSensor>();
                 gyroSensor.Initialize(obj);
             }
@@ -123,11 +126,14 @@ namespace Hakoniwa.Assets.EV3
         {
             motor_a_sensor.UpdateSensorValues();
             motor_b_sensor.UpdateSensorValues();
-            motor_arm_sensor.UpdateSensorValues();
+            if (this.motor_arm_sensor != null)
+            {
+                motor_arm_sensor.UpdateSensorValues();
+                this.writer.Set("motor_angle_c", (int)motor_arm_sensor.GetDegree());
+            }
 
             this.writer.Set("motor_angle_a", (int)motor_a_sensor.GetDegree());
             this.writer.Set("motor_angle_b", (int)motor_b_sensor.GetDegree());
-            this.writer.Set("motor_angle_c", (int)motor_arm_sensor.GetDegree());
 
             colorSensor.UpdateSensorValues();
             ultrasonicSensor.UpdateSensorValues();
@@ -219,7 +225,10 @@ namespace Hakoniwa.Assets.EV3
 
             this.motor_a.SetTargetVelicty(power_a * powerConst);
             this.motor_b.SetTargetVelicty(power_b * powerConst);
-            this.motor_arm.SetTargetVelicty(power_c * this.armMotorConst);
+            if (this.motor_arm != null)
+            {
+                this.motor_arm.SetTargetVelicty(power_c * this.armMotorConst);
+            }
         }
     }
 
