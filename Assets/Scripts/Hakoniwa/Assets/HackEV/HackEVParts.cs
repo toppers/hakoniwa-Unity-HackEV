@@ -14,6 +14,7 @@ namespace Hakoniwa.Assets.HackEV
         private string ultra_sonic_sensor = "RoboModel_Axis/HackEV_L8_Sidewinder_Head/EV3_UltrasonicSensor/EV3_UltrasonicSensor_Bk10";
         private string gyro_sensor = "RoboModel_Axis/HackEV_L8_Sidewinder_Head/EV3_GyroSensor/EV3_GyroSensor_Ash01";
         private string motor_arm = "RoboModel_Axis/HackEV_L8_MiddleMotor/EV3_InteractiveServoMotor_L/EV3_InteractiveServoMotor_L_MotorRoot";
+        private string touch_sensor = "RoboModel_Axis/HackEV_L9_Sidewinder_ShoulderSensor/HackEV_L8_TouchSensor2/L8_DoubleBevelGear20_Bk 1";
 
         public string GetColorSensor()
         {
@@ -36,7 +37,7 @@ namespace Hakoniwa.Assets.HackEV
         }
         public string getTouchSensor()
         {
-            return null;
+            return touch_sensor;
         }
 
         public string getGyroSensor()

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Hakoniwa.Assets;
+using UnityEngine.EventSystems;
 
-public class TouchSensor : MonoBehaviour, IRobotTouchSensor
+public class TouchSensor : MonoBehaviour, IRobotTouchSensor, IPointerDownHandler, IPointerUpHandler
 {
     private GameObject touchSensor;
     private bool isTouched;
@@ -28,6 +29,20 @@ public class TouchSensor : MonoBehaviour, IRobotTouchSensor
         //Debug.Log("Pressed");
     }
     private void OnTriggerExit(Collider other)
+    {
+        this.isTouched = false;
+        //Debug.Log("NotPressed");
+    }
+
+
+    void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+    {
+        this.isTouched = true;
+        //Debug.Log("Pressed");
+    }
+
+
+    void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
     {
         this.isTouched = false;
         //Debug.Log("NotPressed");

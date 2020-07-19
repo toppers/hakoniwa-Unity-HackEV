@@ -227,6 +227,7 @@ namespace Hakoniwa.Assets.EV3
             this.motor_b.SetTargetVelicty(power_b * powerConst);
             if (this.motor_arm != null)
             {
+                //Debug.Log("moter_c:" + power_c);
                 this.motor_arm.SetTargetVelicty(power_c * this.armMotorConst);
             }
         }
