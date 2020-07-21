@@ -30,7 +30,7 @@ namespace Hakoniwa.Core
             bufferParams = hakoniwa.GetComponentInChildren<IoBufferParameter>();
 #if VDEV_IO_MMAP
         io = new MmapFileReader();
-        io.DoStart(this.filepath, this.stime_off);
+        io.DoStart(this.filepath);
 #else
             /*************************************
              * UDP SETTINGS

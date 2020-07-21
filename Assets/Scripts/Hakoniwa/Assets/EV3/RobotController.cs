@@ -202,7 +202,7 @@ namespace Hakoniwa.Assets.EV3
             if ((this.gyroSensor != null) && (reset != 0))
             {
                 this.gyroSensor.ClearDegree();
-                Debug.Log("reset gyro");
+                //Debug.Log("reset gyro");
             }
         }
 

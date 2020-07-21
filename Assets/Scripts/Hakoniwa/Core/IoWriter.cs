@@ -33,7 +33,7 @@ namespace Hakoniwa.Core
 
 #if VDEV_IO_MMAP
         io = new MmapFileWriter();
-        io.DoStart(this.filepath, this.stime_off);
+        io.DoStart(this.filepath);
 #else
             /*************************************
              * UDP SETTINGS

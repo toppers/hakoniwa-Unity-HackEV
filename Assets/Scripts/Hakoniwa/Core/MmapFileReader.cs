@@ -9,9 +9,9 @@ public class MmapFileReader
     private MemoryMappedFile mappedFile;
     private UnmanagedMemoryAccessor accessor;
     IoReaderCallback callback;
-    private int sim_time_off;
+    private int sim_time_off = 16;
 
-    public void DoStart(string filepath, int stime_off)
+    public void DoStart(string filepath)
     {
         if (!System.IO.File.Exists(filepath))
         {
@@ -29,7 +29,6 @@ public class MmapFileReader
         {
             accessor.Write<int>(i * 4, ref init_data);
         }
-        this.sim_time_off = stime_off;
     }
 
     public void RefData(int off_byte, out int data)
