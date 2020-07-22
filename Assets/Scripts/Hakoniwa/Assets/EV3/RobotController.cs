@@ -85,11 +85,15 @@ namespace Hakoniwa.Assets.EV3
             string parts = this.parts.GetMotorC();
             if (parts != null)
             {
-                obj = root.transform.Find(this.transform.name + "/" + this.parts.GetMotorC()).gameObject;
-                this.motor_arm = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotor>();
-                motor_arm.Initialize(obj);
-                this.motor_arm_sensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotorSensor>();
-                motor_arm.SetForce(this.motorPower);
+                //Debug.Log("parts=" + this.parts.GetMotorC());
+                if (root.transform.Find(this.transform.name + "/" + this.parts.GetMotorC()) != null)
+                {
+                    obj = root.transform.Find(this.transform.name + "/" + this.parts.GetMotorC()).gameObject;
+                    this.motor_arm = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotor>();
+                    motor_arm.Initialize(obj);
+                    this.motor_arm_sensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotorSensor>();
+                    motor_arm.SetForce(this.motorPower);
+                }
             }
 
 
@@ -117,9 +121,12 @@ namespace Hakoniwa.Assets.EV3
             parts = this.parts.getGyroSensor();
             if (parts != null)
             {
-                obj = root.transform.Find(this.transform.name + "/" + this.parts.getGyroSensor()).gameObject;
-                gyroSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotGyroSensor>();
-                gyroSensor.Initialize(obj);
+                if (root.transform.Find(this.transform.name + "/" + this.parts.getGyroSensor()) != null)
+                {
+                    obj = root.transform.Find(this.transform.name + "/" + this.parts.getGyroSensor()).gameObject;
+                    gyroSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotGyroSensor>();
+                    gyroSensor.Initialize(obj);
+                }
             }
         }
         private void UpdateSensor()
