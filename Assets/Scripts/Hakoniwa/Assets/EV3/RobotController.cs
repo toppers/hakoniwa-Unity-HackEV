@@ -25,7 +25,8 @@ namespace Hakoniwa.Assets.EV3
         private Hakoniwa.Assets.IRobotMotorSensor motor_arm_sensor;
         private Hakoniwa.Assets.IRobotColorSensor colorSensor;
         private Hakoniwa.Assets.IRobotUltraSonicSensor ultrasonicSensor;
-        private Hakoniwa.Assets.IRobotTouchSensor touchSensor;
+        private Hakoniwa.Assets.IRobotTouchSensor touchSensor0;
+        private Hakoniwa.Assets.IRobotTouchSensor touchSensor1;
         private Hakoniwa.Assets.IRobotGyroSensor gyroSensor;
         private bool isConnected;
         private ulong micon_simtime;
@@ -111,12 +112,19 @@ namespace Hakoniwa.Assets.EV3
             ultrasonicSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotUltraSonicSensor>();
             ultrasonicSensor.Initialize(obj);
 
-            string parts = this.parts.getTouchSensor();
+            string parts = this.parts.getTouchSensor0();
             if (parts != null)
             {
-                obj = root.transform.Find(this.transform.name + "/" + this.parts.getTouchSensor()).gameObject;
-                touchSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotTouchSensor>();
-                touchSensor.Initialize(obj);
+                obj = root.transform.Find(this.transform.name + "/" + this.parts.getTouchSensor0()).gameObject;
+                touchSensor0 = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotTouchSensor>();
+                touchSensor0.Initialize(obj);
+            }
+            parts = this.parts.getTouchSensor1();
+            if (parts != null)
+            {
+                obj = root.transform.Find(this.transform.name + "/" + this.parts.getTouchSensor1()).gameObject;
+                touchSensor1 = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotTouchSensor>();
+                touchSensor1.Initialize(obj);
             }
             parts = this.parts.getGyroSensor();
             if (parts != null)
@@ -144,17 +152,30 @@ namespace Hakoniwa.Assets.EV3
 
             colorSensor.UpdateSensorValues();
             ultrasonicSensor.UpdateSensorValues();
-            if (touchSensor != null)
+            if (touchSensor0 != null)
             {
-                touchSensor.UpdateSensorValues();
-                if (this.touchSensor.IsPressed())
+                touchSensor0.UpdateSensorValues();
+                if (this.touchSensor0.IsPressed())
                 {
-                    //Debug.Log("Touched:");
-                    this.writer.Set("touch_sensor", 4095);
+                    //Debug.Log("Touched0:");
+                    this.writer.Set("touch_sensor0", 4095);
                 }
                 else
                 {
-                    this.writer.Set("touch_sensor", 0);
+                    this.writer.Set("touch_sensor0", 0);
+                }
+            }
+            if (touchSensor1 != null)
+            {
+                touchSensor1.UpdateSensorValues();
+                if (this.touchSensor1.IsPressed())
+                {
+                    //Debug.Log("Touched1:");
+                    this.writer.Set("touch_sensor1", 4095);
+                }
+                else
+                {
+                    this.writer.Set("touch_sensor1", 0);
                 }
             }
             if (gyroSensor != null)
