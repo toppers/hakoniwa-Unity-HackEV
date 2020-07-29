@@ -91,6 +91,12 @@ namespace Hakoniwa.Core
                 index++;
             }
             this.dbgUnityStimeSec = ((double)this.unity_simtime) / 1000000;
+
+
+        }
+        public double GetSimTime()
+        {
+            return this.dbgUnityStimeSec;
         }
     }
 }
