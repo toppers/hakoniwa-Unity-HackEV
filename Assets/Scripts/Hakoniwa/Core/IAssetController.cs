@@ -7,6 +7,7 @@ namespace Hakoniwa.Core
 {
     public interface IAssetController
     {
+        void Initialize();
         bool IsConnected();
         long GetControllerTime();
         void DoUpdate();

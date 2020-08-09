@@ -17,23 +17,23 @@ namespace Hakoniwa.Core
         /*************************************
          * UDP SETTINGS
          *************************************/
-        public string host = "127.0.0.1";
-        public int port = 54002;
+        public string host = null;
+        public int port = 0;
         private UdpCommClient io;
         /*************************************/
 #endif
 
         private IoBufferParameter bufferParams = null;
 
-        public void Start()
+        public void Initialize()
         {
             GameObject hakoniwa = GameObject.Find("Hakoniwa");
 
             bufferParams = hakoniwa.GetComponentInChildren<IoBufferParameter>();
 
 #if VDEV_IO_MMAP
-        io = new MmapFileWriter();
-        io.DoStart(this.filepath);
+            io = new MmapFileWriter();
+            io.DoStart(this.filepath);
 #else
             /*************************************
              * UDP SETTINGS

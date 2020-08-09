@@ -14,7 +14,7 @@ public class MmapFileWriter
     {
         if (!System.IO.File.Exists(filepath))
         {
-            Debug.LogError("filepath is invalid");
+            Debug.LogError("filepath is invalid:" + filepath);
             return;
         }
         else

@@ -8,7 +8,6 @@ using Hakoniwa.Core;
 
 namespace Hakoniwa.Assets.EV3
 {
-
     public class RobotController : MonoBehaviour, IAssetController
     {
         public int powerConst = 10;
@@ -48,8 +47,7 @@ namespace Hakoniwa.Assets.EV3
             UpdateActuator();
             UpdateSensor();
         }
-        // Start is called before the first frame update
-        void Start()
+        public void Initialize()
         {
             this.root = GameObject.Find("Robot");
             this.myObject = GameObject.Find("Robot/" + this.transform.name);
@@ -58,8 +56,29 @@ namespace Hakoniwa.Assets.EV3
             this.isConnected = false;
             this.InitActuator();
             this.InitSensor();
+
+            GameObject hakoniwa = GameObject.Find("Hakoniwa");
+            HakoniwaConfig hakoniwa_cfg = hakoniwa.GetComponentInChildren<Hakoniwa.Core.HakoniwaConfig>();
+            if (hakoniwa_cfg == null)
+            {
+                UnityEngine.Debug.LogError("Not found hakoniwa_cfg : " + hakoniwa_cfg);
+                return;
+            }
             this.writer = this.myObject.GetComponentInChildren<IoWriter>();
+#if VDEV_IO_MMAP
+            this.writer.filepath = hakoniwa_cfg.GetRobotMmapWriterFilePath(this.transform.name);
+#else
+            this.writer.host = hakoniwa_cfg.GetRobotConfig(this.transform.name).Udp.AthrillIpAddr;
+            this.writer.port = hakoniwa_cfg.GetRobotConfig(this.transform.name).Udp.AthrillPort;
+#endif
+            this.writer.Initialize();
+
             this.reader = this.myObject.GetComponentInChildren<IoReader>();
+#if VDEV_IO_MMAP
+            this.reader.filepath = hakoniwa_cfg.GetRobotMmapReaderFilePath(this.transform.name);
+#else
+            this.reader.port = hakoniwa_cfg.GetRobotConfig(this.transform.name).Udp.UnityPort;
+#endif
             this.reader.Initialize();
             this.reader.SetCallback(UdpServerCallback);
         }
@@ -68,7 +87,11 @@ namespace Hakoniwa.Assets.EV3
             //Debug.Log("hakoniwa_time=" + hakoniwa_time);
             this.writer.SetSimTime((ulong)hakoniwa_time);
             this.reader.DoRun();
-            this.writer.Publish();
+
+            if (this.IsConnected())
+            {
+                this.writer.Publish();
+            }
         }
 
         private void InitActuator()

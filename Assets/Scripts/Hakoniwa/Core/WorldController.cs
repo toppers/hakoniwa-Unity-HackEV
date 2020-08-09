@@ -22,11 +22,16 @@ namespace Hakoniwa.Core
             this.root = GameObject.Find("Robot");
             int count = 0;
 
+            HakoniwaConfig cfg = GameObject.Find("Hakoniwa").GetComponentInChildren<HakoniwaConfig>();
+            cfg.Initialize();
+
             foreach (Transform child in this.root.transform) {
                 count++;
                 Debug.Log("child=" + child.name);
                 GameObject obj = root.transform.Find(child.name).gameObject;
-                this.assets.Add(obj.GetComponentInChildren<Hakoniwa.Core.IAssetController>());
+                IAssetController ctrl = obj.GetComponentInChildren<Hakoniwa.Core.IAssetController >();
+                ctrl.Initialize();
+                this.assets.Add(ctrl);
             }
             this.diff_time = new long[count];
             this.dbgMiconStimeSec = new double[count];

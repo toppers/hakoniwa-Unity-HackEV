@@ -15,15 +15,12 @@ namespace Hakoniwa.Core
         /*************************************
          * UDP SETTINGS
          *************************************/
-        public int port = 54001;
+        public int port = 0;
         private UdpCommServer io;
         /*************************************/
 #endif
         private IoBufferParameter bufferParams = null;
 
-        public void Start()
-        {
-        }
         public void Initialize()
         {
             GameObject hakoniwa = GameObject.Find("Hakoniwa");
