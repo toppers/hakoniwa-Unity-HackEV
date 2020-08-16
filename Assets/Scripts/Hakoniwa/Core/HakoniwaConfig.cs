@@ -22,13 +22,8 @@ namespace Hakoniwa.Core
         public string WorkspacePathUnix;
         public string ApplicationName;
         public string BinaryName;
-#if VDEV_IO_MMAP
-#else
         public HakoniwaRobtUdpConfigInfo Udp;
-#endif
     }
-#if VDEV_IO_MMAP
-#else
     [System.Serializable]
     public class HakoniwaRobtUdpConfigInfo
     {
@@ -36,12 +31,11 @@ namespace Hakoniwa.Core
         public int AthrillPort;
         public int UnityPort;
     }
-#endif
 
     public class HakoniwaConfig : MonoBehaviour
     {
         private string configPath = "config.json";
-        private HakoniwaConfigInfo cfg = null;
+        public HakoniwaConfigInfo cfg = null;
         private string FilePath;
         // Start is called before the first frame update
         public void Initialize()
@@ -75,12 +69,27 @@ namespace Hakoniwa.Core
                 Debug.Log("BinaryName=" + cfg.robots[i].BinaryName);
                 Debug.Log("WorkspacePathWin=" + cfg.robots[i].WorkspacePathWin);
                 Debug.Log("WorkspacePathUnix=" + cfg.robots[i].WorkspacePathUnix);
-#if VDEV_IO_MMAP
-#else
-                Debug.Log("AthrillIpAddr=" + cfg.robots[i].Udp.AthrillIpAddr);
-                Debug.Log("AthrillPort=" + cfg.robots[i].Udp.AthrillPort);
-                Debug.Log("UnityPort=" + cfg.robots[i].Udp.UnityPort);
-#endif
+                if (cfg.robots[i].Udp.AthrillIpAddr != null)
+                {
+                    Debug.Log("AthrillIpAddr=" + cfg.robots[i].Udp.AthrillIpAddr);
+                    Debug.Log("AthrillPort=" + cfg.robots[i].Udp.AthrillPort);
+                    Debug.Log("UnityPort=" + cfg.robots[i].Udp.UnityPort);
+                }
+                else
+                {
+                    Debug.Log("## MMAP Mode");
+                }
+            }
+        }
+        public Boolean IsMmap(HakoniwaRobotConfigInfo robot_config)
+        {
+            if (robot_config.Udp.AthrillIpAddr == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
         public string GetCurrentPath()

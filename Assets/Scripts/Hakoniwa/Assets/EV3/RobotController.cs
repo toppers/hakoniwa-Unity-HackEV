@@ -30,6 +30,7 @@ namespace Hakoniwa.Assets.EV3
         private bool isConnected;
         private ulong micon_simtime;
         private IEV3Parts parts;
+        private HakoniwaRobotConfigInfo robotConfig;
 
         IoWriter writer;
         IoReader reader;
@@ -65,21 +66,28 @@ namespace Hakoniwa.Assets.EV3
                 return;
             }
             this.writer = this.myObject.GetComponentInChildren<IoWriter>();
-#if VDEV_IO_MMAP
-            this.writer.filepath = hakoniwa_cfg.GetRobotMmapWriterFilePath(this.transform.name);
-#else
-            this.writer.host = hakoniwa_cfg.GetRobotConfig(this.transform.name).Udp.AthrillIpAddr;
-            this.writer.port = hakoniwa_cfg.GetRobotConfig(this.transform.name).Udp.AthrillPort;
-#endif
-            this.writer.Initialize();
-
             this.reader = this.myObject.GetComponentInChildren<IoReader>();
-#if VDEV_IO_MMAP
-            this.reader.filepath = hakoniwa_cfg.GetRobotMmapReaderFilePath(this.transform.name);
-#else
-            this.reader.port = hakoniwa_cfg.GetRobotConfig(this.transform.name).Udp.UnityPort;
-#endif
-            this.reader.Initialize();
+            this.robotConfig = hakoniwa_cfg.GetRobotConfig(this.transform.name);
+            if (robotConfig == null)
+            {
+                UnityEngine.Debug.LogError("Not found hakoniwa_robot_cfg : " + robotConfig);
+                return;
+            }
+            if (hakoniwa_cfg.IsMmap(robotConfig))
+            {
+                this.writer.filepath = hakoniwa_cfg.GetRobotMmapWriterFilePath(this.transform.name);
+                this.reader.filepath = hakoniwa_cfg.GetRobotMmapReaderFilePath(this.transform.name);
+                this.writer.InitializeMmap();
+                this.reader.InitializeMmap();
+            }
+            else
+            {
+                this.writer.host = hakoniwa_cfg.GetRobotConfig(this.transform.name).Udp.AthrillIpAddr;
+                this.writer.port = hakoniwa_cfg.GetRobotConfig(this.transform.name).Udp.AthrillPort;
+                this.reader.port = hakoniwa_cfg.GetRobotConfig(this.transform.name).Udp.UnityPort;
+                this.writer.Initialize();
+                this.reader.Initialize();
+            }
             this.reader.SetCallback(UdpServerCallback);
         }
         public void DoPublish(long hakoniwa_time)
@@ -96,18 +104,25 @@ namespace Hakoniwa.Assets.EV3
 
         private void InitActuator()
         {
-            GameObject obj = root.transform.Find(this.transform.name + "/" + this.parts.GetMotorA()).gameObject;
-            this.motor_a = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotor>();
-            motor_a.Initialize(obj);
-            this.motor_a_sensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotorSensor>();
-
-            obj = root.transform.Find(this.transform.name + "/" + this.parts.GetMotorB()).gameObject;
-            this.motor_b = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotor>();
-            motor_b.Initialize(obj);
-            this.motor_b_sensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotorSensor>();
-
-            string parts = this.parts.GetMotorC();
-            if (parts != null)
+            GameObject obj;
+            string subParts = this.parts.GetMotorA();
+            if (subParts != null)
+            {
+                obj = root.transform.Find(this.transform.name + "/" + this.parts.GetMotorA()).gameObject;
+                this.motor_a = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotor>();
+                motor_a.Initialize(obj);
+                this.motor_a_sensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotorSensor>();
+            }
+            subParts = this.parts.GetMotorB();
+            if (subParts != null)
+            {
+                obj = root.transform.Find(this.transform.name + "/" + this.parts.GetMotorB()).gameObject;
+                this.motor_b = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotor>();
+                motor_b.Initialize(obj);
+                this.motor_b_sensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotorSensor>();
+            }
+            subParts = this.parts.GetMotorC();
+            if (subParts != null)
             {
                 //Debug.Log("parts=" + this.parts.GetMotorC());
                 if (root.transform.Find(this.transform.name + "/" + this.parts.GetMotorC()) != null)
@@ -120,37 +135,48 @@ namespace Hakoniwa.Assets.EV3
                 }
             }
 
-
-            motor_a.SetForce(this.motorPower);
-            motor_b.SetForce(this.motorPower);
+            if (this.motor_a != null)
+            {
+                motor_a.SetForce(this.motorPower);
+            }
+            if (this.motor_b != null)
+            {
+                motor_b.SetForce(this.motorPower);
+            }
         }
         private void InitSensor()
         {
             GameObject obj;
-            obj = root.transform.Find(this.transform.name + "/" + this.parts.GetColorSensor()).gameObject;
-            colorSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotColorSensor>();
-            colorSensor.Initialize(obj);
-
-            obj = root.transform.Find(this.transform.name + "/" + this.parts.getUltraSonicSensor()).gameObject;
-            ultrasonicSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotUltraSonicSensor>();
-            ultrasonicSensor.Initialize(obj);
-
-            string parts = this.parts.getTouchSensor0();
-            if (parts != null)
+            string subParts = this.parts.GetColorSensor();
+            if (subParts != null)
+            {
+                obj = root.transform.Find(this.transform.name + "/" + this.parts.GetColorSensor()).gameObject;
+                colorSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotColorSensor>();
+                colorSensor.Initialize(obj);
+            }
+            subParts = this.parts.getUltraSonicSensor();
+            if (subParts != null)
+            {
+                obj = root.transform.Find(this.transform.name + "/" + this.parts.getUltraSonicSensor()).gameObject;
+                ultrasonicSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotUltraSonicSensor>();
+                ultrasonicSensor.Initialize(obj);
+            }
+            subParts = this.parts.getTouchSensor0();
+            if (subParts != null)
             {
                 obj = root.transform.Find(this.transform.name + "/" + this.parts.getTouchSensor0()).gameObject;
                 touchSensor0 = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotTouchSensor>();
                 touchSensor0.Initialize(obj);
             }
-            parts = this.parts.getTouchSensor1();
-            if (parts != null)
+            subParts = this.parts.getTouchSensor1();
+            if (subParts != null)
             {
                 obj = root.transform.Find(this.transform.name + "/" + this.parts.getTouchSensor1()).gameObject;
                 touchSensor1 = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotTouchSensor>();
                 touchSensor1.Initialize(obj);
             }
-            parts = this.parts.getGyroSensor();
-            if (parts != null)
+            subParts = this.parts.getGyroSensor();
+            if (subParts != null)
             {
                 if (root.transform.Find(this.transform.name + "/" + this.parts.getGyroSensor()) != null)
                 {
@@ -162,19 +188,37 @@ namespace Hakoniwa.Assets.EV3
         }
         private void UpdateSensor()
         {
-            motor_a_sensor.UpdateSensorValues();
-            motor_b_sensor.UpdateSensorValues();
+            if (this.motor_a_sensor != null)
+            {
+                motor_a_sensor.UpdateSensorValues();
+                this.writer.Set("motor_angle_a", (int)motor_a_sensor.GetDegree());
+            }
+            if (this.motor_b_sensor != null)
+            {
+                motor_b_sensor.UpdateSensorValues();
+                this.writer.Set("motor_angle_b", (int)motor_b_sensor.GetDegree());
+            }
             if (this.motor_arm_sensor != null)
             {
                 motor_arm_sensor.UpdateSensorValues();
                 this.writer.Set("motor_angle_c", (int)motor_arm_sensor.GetDegree());
             }
-
-            this.writer.Set("motor_angle_a", (int)motor_a_sensor.GetDegree());
-            this.writer.Set("motor_angle_b", (int)motor_b_sensor.GetDegree());
-
-            colorSensor.UpdateSensorValues();
-            ultrasonicSensor.UpdateSensorValues();
+            if (this.colorSensor != null)
+            {
+                colorSensor.UpdateSensorValues();
+                this.writer.Set("sensor_reflect", (int)(this.colorSensor.GetLightValue() * 100f));
+                ColorRGB color_sensor_rgb;
+                this.colorSensor.GetRgb(out color_sensor_rgb);
+                this.writer.Set("sensor_rgb_r", color_sensor_rgb.r);
+                this.writer.Set("sensor_rgb_g", color_sensor_rgb.g);
+                this.writer.Set("sensor_rgb_b", color_sensor_rgb.b);
+                this.writer.Set("sensor_color", (int)this.colorSensor.GetColorId());
+            }
+            if (this.ultrasonicSensor != null)
+            {
+                ultrasonicSensor.UpdateSensorValues();
+                this.writer.Set("sensor_ultrasonic", (int)(this.ultrasonicSensor.GetDistanceValue() * 10));
+            }
             if (touchSensor0 != null)
             {
                 touchSensor0.UpdateSensorValues();
@@ -208,14 +252,6 @@ namespace Hakoniwa.Assets.EV3
                 this.writer.Set("gyro_degree_rate", (int)gyroSensor.GetDegreeRate());
             }
 
-            this.writer.Set("sensor_ultrasonic", (int)(this.ultrasonicSensor.GetDistanceValue() * 10));
-            this.writer.Set("sensor_reflect", (int)(this.colorSensor.GetLightValue() * 100f));
-            ColorRGB color_sensor_rgb;
-            this.colorSensor.GetRgb(out color_sensor_rgb);
-            this.writer.Set("sensor_rgb_r", color_sensor_rgb.r);
-            this.writer.Set("sensor_rgb_g", color_sensor_rgb.g);
-            this.writer.Set("sensor_rgb_b", color_sensor_rgb.b);
-            this.writer.Set("sensor_color", (int)this.colorSensor.GetColorId());
         }
 
         private void UdpServerCallback()
@@ -232,19 +268,19 @@ namespace Hakoniwa.Assets.EV3
             }
             int reset = 0;
             this.reader.RefData("motor_reset_angle_a", out reset);
-            if (reset != 0)
+            if ((this.motor_a_sensor != null) && (reset != 0))
             {
                 this.motor_a_sensor.ClearDegree();
                 Debug.Log("reset tire1");
             }
             this.reader.RefData("motor_reset_angle_b", out reset);
-            if (reset != 0)
+            if ((this.motor_b_sensor != null) && (reset != 0))
             {
                 this.motor_b_sensor.ClearDegree();
                 Debug.Log("reset tire2");
             }
             this.reader.RefData("motor_reset_angle_c", out reset);
-            if (reset != 0)
+            if ((this.motor_arm_sensor != null) && (reset != 0))
             {
                 this.motor_arm_sensor.ClearDegree();
                 Debug.Log("reset arm");
@@ -274,8 +310,14 @@ namespace Hakoniwa.Assets.EV3
             this.reader.RefData("motor_stop_b", out isStop_b);
             this.reader.RefData("motor_stop_c", out isStop_c);
 
-            this.motor_a.SetTargetVelicty(power_a * powerConst);
-            this.motor_b.SetTargetVelicty(power_b * powerConst);
+            if (this.motor_a != null)
+            {
+                this.motor_a.SetTargetVelicty(power_a * powerConst);
+            }
+            if (this.motor_b != null)
+            {
+                this.motor_b.SetTargetVelicty(power_b * powerConst);
+            }
             if (this.motor_arm != null)
             {
                 //Debug.Log("moter_c:" + power_c);
