@@ -33,7 +33,11 @@ namespace Hakoniwa.Assets.Jeep
         {
             return ultra_sonic_sensor;
         }
-        public string getTouchSensor()
+        public string getTouchSensor0()
+        {
+            return null;
+        }
+        public string getTouchSensor1()
         {
             return null;
         }

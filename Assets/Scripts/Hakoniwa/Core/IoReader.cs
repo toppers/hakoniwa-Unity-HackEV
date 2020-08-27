@@ -8,38 +8,44 @@ namespace Hakoniwa.Core
 {
     public class IoReader : MonoBehaviour
     {
-#if VDEV_IO_MMAP
-    public string filepath = null;
-    private MmapFileReader io;
-#else
+        private IIoReader io;
+        /*************************************
+         * MMAP SETTINGS
+         *************************************/
+        public string filepath = null;
+        private MmapFileReader io_mmap;
+
         /*************************************
          * UDP SETTINGS
          *************************************/
-        public int port = 54001;
-        private UdpCommServer io;
+        public int port = 0;
+        private UdpCommServer io_udp;
         /*************************************/
-#endif
+
         private IoBufferParameter bufferParams = null;
 
-        public void Start()
-        {
-        }
         public void Initialize()
         {
             GameObject hakoniwa = GameObject.Find("Hakoniwa");
             bufferParams = hakoniwa.GetComponentInChildren<IoBufferParameter>();
-#if VDEV_IO_MMAP
-        io = new MmapFileReader();
-        io.DoStart(this.filepath);
-#else
             /*************************************
              * UDP SETTINGS
              *************************************/
-            io = new UdpCommServer();
-            io.port = port;
+            io_udp = new UdpCommServer();
+            io_udp.port = port;
             /*************************************/
-            io.DoStart();
-#endif
+            io_udp.DoStart();
+            this.io = io_udp;
+            return;
+        }
+        public void InitializeMmap()
+        {
+            GameObject hakoniwa = GameObject.Find("Hakoniwa");
+            bufferParams = hakoniwa.GetComponentInChildren<IoBufferParameter>();
+            io_mmap = new MmapFileReader();
+            io_mmap.DoStart(this.filepath);
+            this.io = io_mmap;
+            return;
         }
         public void SetCallback(IoReaderCallback func)
         {

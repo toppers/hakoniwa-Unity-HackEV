@@ -4,51 +4,58 @@ using System.IO;
 using System.IO.MemoryMappedFiles;
 using UnityEngine;
 
-public class MmapFileReader
+using Hakoniwa.Assets;
+
+namespace Hakoniwa.Core
 {
-    private MemoryMappedFile mappedFile;
-    private UnmanagedMemoryAccessor accessor;
-    IoReaderCallback callback;
-    private int sim_time_off = 16;
-
-    public void DoStart(string filepath)
+    public class MmapFileReader: IIoReader
     {
-        if (!System.IO.File.Exists(filepath))
+        private MemoryMappedFile mappedFile;
+        private UnmanagedMemoryAccessor accessor;
+        IoReaderCallback callback;
+        private int sim_time_off = 16;
+
+        public void DoStart(string filepath)
         {
-            Debug.LogError("filepath is invalid");
-            return;
+            if (!System.IO.File.Exists(filepath))
+            {
+                Debug.LogError("filepath is invalid:" + filepath);
+                return;
+            }
+            else
+            {
+                Debug.Log("MmapFileReader:filepath=" + filepath);
+            }
+            this.mappedFile = MemoryMappedFile.CreateFromFile(filepath, System.IO.FileMode.Open);
+            this.accessor = mappedFile.CreateViewAccessor();
+            int init_data = 0;
+            for (int i = 0; i < 256; i++)
+            {
+                accessor.Write<int>(i * 4, ref init_data);
+            }
         }
-        else
+
+        public void RefData(int off_byte, out int data)
         {
-            Debug.Log("MmapFileReader:filepath=" + filepath);
+            data = accessor.ReadInt32(off_byte);
         }
-        this.mappedFile = MemoryMappedFile.CreateFromFile(filepath, System.IO.FileMode.Open);
-        this.accessor = mappedFile.CreateViewAccessor();
-        int init_data = 0;
-        for (int i = 0; i < 256; i++)
+
+        public void RefData64(int off, out ulong data)
         {
-            accessor.Write<int>(i * 4, ref init_data);
+            data = accessor.ReadUInt64(off + this.sim_time_off);
         }
-    }
-
-    public void RefData(int off_byte, out int data)
-    {
-        data = accessor.ReadInt32(off_byte);
-    }
-
-    public void RefData64(int off, out ulong data)
-    {
-        data = accessor.ReadUInt64(off + this.sim_time_off);
-    }
 
 
-    public void SetCallback(IoReaderCallback func)
-    {
-        this.callback = func;
-    }
-    public void DoRun()
-    {
-        this.callback();
+        public void SetCallback(IoReaderCallback func)
+        {
+            this.callback = func;
+        }
+        public void DoRun()
+        {
+            this.callback();
+        }
+
     }
 
 }
+
