@@ -25,7 +25,7 @@
 自動化したところは強調表示し，()内にツール番号を表記しています．
 
 1. 本リポジトリを clone します．
-2. 単体ロボット向けシミュレータのコンフィグを行います．
+2. 単体ロボット向けシミュレータのコンフィグを行います(後述)．
 3. ***unityパッケージをダウンロードします(installer-1)．***
 4. ***v850版gccをダウンロードします(installer-1)．***
 5. Unityを起動します．
@@ -101,7 +101,7 @@ unityパッケージとv850版gccをdownloads直下にダウンロードする�
 使い方は以下の通りです．
 
 ```shell
- $ bash installer/install-single-robot.bash
+ $ bash installer/create-project.bash
 ```
 
 # コンフィグファイルの説明
