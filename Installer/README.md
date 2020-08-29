@@ -18,6 +18,7 @@
   * git
   * ruby
   * wget
+  * jq
 
 # インストールの流れ
 
