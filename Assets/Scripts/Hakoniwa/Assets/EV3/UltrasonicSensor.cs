@@ -8,8 +8,8 @@ namespace Hakoniwa.Assets.EV3
 {
     public class UltrasonicSensor : MonoBehaviour, IRobotUltraSonicSensor
     {
-        private float contact_distance = 120;
-        public float distanceValue;
+        private float contact_distance = 12; /* centimeters/10 */
+        public float distanceValue; /* centimeters/10 */
         private GameObject frontSensor;
 
         public void Initialize(GameObject root)
@@ -20,28 +20,21 @@ namespace Hakoniwa.Assets.EV3
 
         public float GetDistanceValue()
         {
-            return distanceValue;
+            return distanceValue * 10; /* centimeters */
         }
         public void UpdateSensorValues()
         {
-            //nothing to do
+            Vector3 fwd = frontSensor.transform.TransformDirection(Vector3.forward);
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, fwd, out hit, contact_distance))
+            {
+                this.distanceValue = hit.distance;
+            }
+            else
+            {
+                this.distanceValue = contact_distance;
+            }
         }
-        private void OnTriggerStay(Collider other)
-        {
-
-
-            Vector3 Apoint = frontSensor.transform.position;
-            Vector3 Bpoint = other.gameObject.transform.position;
-
-            // Distance between Sensor and Object
-            this.distanceValue = Vector3.Distance(Apoint, Bpoint);
-
-        }
-        private void OnTriggerExit(Collider other)
-        {
-            this.distanceValue = contact_distance;
-        }
-
     }
 }
 

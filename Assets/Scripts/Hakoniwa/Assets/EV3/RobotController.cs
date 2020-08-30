@@ -18,7 +18,7 @@ namespace Hakoniwa.Assets.EV3
         private GameObject myObject;
         private Hakoniwa.Assets.IRobotMotor motor_a;
         private Hakoniwa.Assets.IRobotMotor motor_b;
-        private Hakoniwa.Assets.IRobotMotor motor_arm;
+        private Hakoniwa.Assets.IRobotMotor motor_c;
         private Hakoniwa.Assets.IRobotMotorSensor motor_a_sensor;
         private Hakoniwa.Assets.IRobotMotorSensor motor_b_sensor;
         private Hakoniwa.Assets.IRobotMotorSensor motor_arm_sensor;
@@ -128,10 +128,10 @@ namespace Hakoniwa.Assets.EV3
                 if (root.transform.Find(this.transform.name + "/" + this.parts.GetMotorC()) != null)
                 {
                     obj = root.transform.Find(this.transform.name + "/" + this.parts.GetMotorC()).gameObject;
-                    this.motor_arm = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotor>();
-                    motor_arm.Initialize(obj);
+                    this.motor_c = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotor>();
+                    motor_c.Initialize(obj);
                     this.motor_arm_sensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotorSensor>();
-                    motor_arm.SetForce(this.motorPower);
+                    motor_c.SetForce(this.motorPower);
                 }
             }
 
@@ -318,10 +318,10 @@ namespace Hakoniwa.Assets.EV3
             {
                 this.motor_b.SetTargetVelicty(power_b * powerConst);
             }
-            if (this.motor_arm != null)
+            if (this.motor_c != null)
             {
                 //Debug.Log("moter_c:" + power_c);
-                this.motor_arm.SetTargetVelicty(power_c * this.armMotorConst);
+                this.motor_c.SetTargetVelicty(power_c * this.armMotorConst);
             }
         }
     }
