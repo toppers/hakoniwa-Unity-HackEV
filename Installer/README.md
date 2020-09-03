@@ -99,11 +99,13 @@ unityパッケージとv850版gccをdownloads直下にダウンロードする�
   * simulator/ev3rt-athrill-v850e2m/sdk/workspace/<*APL_NAME*> (Athrill向けのコンフィグファイル)
   * simulator/unity/project/<*UNITY_PROJECT_NAME*> (Unity向けのコンフィグファイル)
 
-使い方は以下の通りです．
+使い方は以下の通りです(例：mmapの場合)．
 
 ```shell
- $ bash installer/create-project.bash
+ $ bash installer/create-project.bash mmap
 ```
+
+上記はMMAPの例ですが，UDPの場合は，udpとしてください．
 
 # コンフィグファイルの説明
 
