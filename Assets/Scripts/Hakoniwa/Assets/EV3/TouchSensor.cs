@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class TouchSensor : MonoBehaviour, IRobotTouchSensor, IPointerDownHandler, IPointerUpHandler
 {
     private GameObject touchSensor;
-    private bool isTouched;
+    public bool isTouched;
 
     public void Initialize(GameObject root)
     {

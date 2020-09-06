@@ -44,12 +44,17 @@ namespace Hakoniwa.Assets.Jeep
 
         public string getGyroSensor()
         {
-            throw null;
+            return null;
         }
 
         public string GetMotorC()
         {
-            throw null;
+            return null;
+        }
+
+        public string GetLed()
+        {
+            return null;
         }
     }
 }

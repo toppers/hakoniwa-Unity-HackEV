@@ -53,5 +53,9 @@ namespace Hakoniwa.Assets.SimpleRobot
         {
             return this.motor_arm;
         }
+        public string GetLed()
+        {
+            return null;
+        }
     }
 }

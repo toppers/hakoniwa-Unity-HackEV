@@ -27,6 +27,7 @@ namespace Hakoniwa.Assets.EV3
         private Hakoniwa.Assets.IRobotTouchSensor touchSensor0;
         private Hakoniwa.Assets.IRobotTouchSensor touchSensor1;
         private Hakoniwa.Assets.IRobotGyroSensor gyroSensor;
+        private Hakoniwa.Assets.IRobotLed led;
         private bool isConnected;
         private ulong micon_simtime;
         private IEV3Parts parts;
@@ -111,6 +112,7 @@ namespace Hakoniwa.Assets.EV3
                 obj = root.transform.Find(this.transform.name + "/" + this.parts.GetMotorA()).gameObject;
                 this.motor_a = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotor>();
                 motor_a.Initialize(obj);
+                motor_a.SetForce(this.motorPower);
                 this.motor_a_sensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotorSensor>();
             }
             subParts = this.parts.GetMotorB();
@@ -119,6 +121,7 @@ namespace Hakoniwa.Assets.EV3
                 obj = root.transform.Find(this.transform.name + "/" + this.parts.GetMotorB()).gameObject;
                 this.motor_b = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotor>();
                 motor_b.Initialize(obj);
+                motor_b.SetForce(this.motorPower);
                 this.motor_b_sensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotMotorSensor>();
             }
             subParts = this.parts.GetMotorC();
@@ -134,14 +137,15 @@ namespace Hakoniwa.Assets.EV3
                     motor_c.SetForce(this.motorPower);
                 }
             }
-
-            if (this.motor_a != null)
+            subParts = this.parts.GetLed();
+            if (subParts != null)
             {
-                motor_a.SetForce(this.motorPower);
-            }
-            if (this.motor_b != null)
-            {
-                motor_b.SetForce(this.motorPower);
+                if (root.transform.Find(this.transform.name + "/" + this.parts.GetLed()) != null)
+                {
+                    obj = root.transform.Find(this.transform.name + "/" + this.parts.GetLed()).gameObject;
+                    this.led = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotLed>();
+                    led.Initialize(obj);
+                }
             }
         }
         private void InitSensor()
@@ -301,7 +305,9 @@ namespace Hakoniwa.Assets.EV3
             int isStop_a = 0;
             int isStop_b = 0;
             int isStop_c = 0;
+            int led_color = 0;
 
+            this.reader.RefData("led", out led_color);
             this.reader.RefData("motor_power_a", out power_a);
             this.reader.RefData("motor_power_b", out power_b);
             this.reader.RefData("motor_power_c", out power_c);
@@ -310,6 +316,10 @@ namespace Hakoniwa.Assets.EV3
             this.reader.RefData("motor_stop_b", out isStop_b);
             this.reader.RefData("motor_stop_c", out isStop_c);
 
+            if (this.led != null)
+            {
+                this.led.SetLedColor((LedColor)(((led_color) & 0x3)));
+            }
             if (this.motor_a != null)
             {
                 this.motor_a.SetTargetVelicty(power_a * powerConst);
@@ -320,7 +330,6 @@ namespace Hakoniwa.Assets.EV3
             }
             if (this.motor_c != null)
             {
-                //Debug.Log("moter_c:" + power_c);
                 this.motor_c.SetTargetVelicty(power_c * this.armMotorConst);
             }
         }
