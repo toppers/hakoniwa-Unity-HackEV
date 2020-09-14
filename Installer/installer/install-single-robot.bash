@@ -14,4 +14,4 @@ fi
 
 bash ${TOOL_DIR}/ev3rt_install.bash
 bash ${TOOL_DIR}/sample_install.bash
-
+bash install-v850-gcc.bash
