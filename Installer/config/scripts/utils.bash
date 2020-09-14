@@ -4,7 +4,8 @@ export OUT_WIN_PATH=
 wslpath2winpath()
 {
 	arg=${1}
-	OUT_WIN_PATH=`echo $arg | sed -e 's/\/mnt\/'${WSL_WIN_DRIVE_NAME}'/'${WSL_WIN_DRIVE_NAME}':/g' | sed -e 's/\//\\\\\\\\/g'`
+	WIN_DRIVE_NAME=`echo $arg | cut -d"/" -f3`
+	OUT_WIN_PATH=`echo $arg | sed -e 's/\/mnt\/'${WIN_DRIVE_NAME}'/'${WIN_DRIVE_NAME}':/g' | sed -e 's/\//\\\\\\\\/g'`
 }
 
 export TERMINAL_PATH=
