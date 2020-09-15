@@ -1,11 +1,11 @@
 # 概要
 
-ここでは，v850版単体ロボット向けシミュレータのインストーラを管理しています．  
+ここでは，v850版単体ロボット向けシミュレータのインストーラおよび開発支援ツール類を管理しています．  
 [箱庭Webサイトのインストール手順](https://toppers.github.io/hakoniwa/single-robot-setup/single-robot-setup-index/)において，手動でインストールすることも可能ですが，操作ミス等が発生する可能性もあります．そこで，インストール自動化可能なものを本リポジトリでツール化しています．
 
 # 前提
 
-本インストーラは，以下の環境を前提とします．
+インストーラは，以下の環境を前提とします．
 
 * 対象OS
   * Windows10
@@ -154,3 +154,47 @@ MMAPの場合は，設定事項は特にありません．
 IPアドレスの調べ方については，以下をご参照ください．
 
 https://toppers.github.io/hakoniwa/single-robot-setup-detail/61_unity_install_udp_v2.0/
+
+# 開発支援ツール
+EV3RTのアプリケーション開発用の支援ツールとして，以下を用意しています．
+
+* プロジェクト新規作成ツール
+* ビルドツール
+
+## プロジェクト新規作成ツール
+本ツールは，config/config.bash の*APL_NAME* で指定されたサンプルプログラム名で，ev3rtプロジェクトにサンプルプログラム管理フォルダを新規作成し，Athrillのコンフィファイルも自動生成/配置します．
+また，config/config.bash の *UNITY_PROJECT_NAME* で指定されたUnityプロジェクトにコンフィグファイルを自動生成します．
+
+* ツール配置場所
+  * installer/
+* ファイル名
+  * create-project.bash
+* 作成したファイルの配置場所
+  * simulator/ev3rt-athrill-v850e2m/sdk/workspace/<*APL_NAME*> (Athrill向けのコンフィグファイル)
+  * simulator/unity/project/<*UNITY_PROJECT_NAME*> (Unity向けのコンフィグファイル)
+
+使い方は以下の通りです(例：mmapの場合)．
+
+```shell
+ $ bash installer/create-project.bash mmap
+```
+
+
+## ビルドツール
+本ツールは，config/config.bash の*APL_NAME* で指定されたアプリケーションをビルドします．
+ビルド―ツールとしては，以下の２種類を用意しています．
+
+* 全体ビルドツール
+  * clean_build.bash 
+* 再ビルドツール
+  * rebuild.bash 
+
+いずれも引数なしで，以下のように実行します．
+
+```shell
+ $ bash build/clean_build.bash
+```
+
+```shell
+ $ bash build/rebuild.bash
+```
