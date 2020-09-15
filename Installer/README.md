@@ -93,7 +93,7 @@ unityパッケージとv850版gccをdownloads直下にダウンロードする�
 * ツール配置場所
   * installer/
 * ファイル名
-  * create-project.bash
+  * import-project.bash
 * 作成したファイルの配置場所
   * simulator/ev3rt-athrill-v850e2m/sdk/workspace (サンプルコード)
   * simulator/ev3rt-athrill-v850e2m/sdk/workspace/<*APL_NAME*> (Athrill向けのコンフィグファイル)
@@ -102,7 +102,7 @@ unityパッケージとv850版gccをdownloads直下にダウンロードする�
 使い方は以下の通りです(例：mmapの場合)．
 
 ```shell
- $ bash installer/create-project.bash mmap
+ $ bash installer/import-project.bash mmap
 ```
 
 上記はMMAPの例ですが，UDPの場合は，udpとしてください．
