@@ -6,7 +6,7 @@ source config/scripts/utils.bash
 export ATHRILL_PATH=`which athrill2`
 export WORKSPACE_PATH_UNIX=${EV3RT_DIR}/sdk/workspace
 export ROBOT_NAME="RoboModel"
-export APL_NAME="line_trace"
+export APL_NAME="test001"
 export UNITY_PROJECT_NAME="single-robot"
 export UNITY_PROJECT_PATH=${UNITY_DIR}/${UNITY_PROJECT_NAME}
 export UNITY_PROJECT_BUILD_PATH=${UNITY_DIR}/${UNITY_PROJECT_NAME}/Build
