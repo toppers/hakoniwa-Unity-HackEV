@@ -47,7 +47,7 @@
 
 ## installer-1
 
-unityパッケージとv850版gccをdownloads直下にダウンロードするツールです．  
+unityパッケージをdownloads直下にダウンロードするツールです．  
 
 * ツール配置場所
   * installer/
@@ -94,8 +94,8 @@ unityパッケージとv850版gccをdownloads直下にダウンロードする�
 * ファイル名
   * import-project.bash
 * 作成したファイルの配置場所
-  * simulator/ev3rt-athrill-v850e2m/sdk/workspace (サンプルコード)
-  * simulator/ev3rt-athrill-v850e2m/sdk/workspace/<*APL_NAME*> (Athrill向けのコンフィグファイル)
+  * simulator/ev3rt-athrill-ARMv7-A/sdk/workspace (サンプルコード)
+  * simulator/ev3rt-athrill-ARMv7-A/sdk/workspace/<*APL_NAME*> (Athrill向けのコンフィグファイル)
   * simulator/unity/project/<*UNITY_PROJECT_NAME*> (Unity向けのコンフィグファイル)
 
 使い方は以下の通りです(例：mmapの場合)．
