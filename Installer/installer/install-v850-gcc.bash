@@ -51,15 +51,3 @@ else
 		exit 1
 	fi
 fi
-
-grep "athrill-gcc-package" ${HOME}/.bashrc > /dev/null
-if [ $? -ne 0 ]
-then
-	echo "export PATH=${ATHRILL_GCC_PATH}/athrill-gcc-package/usr/local/athrill-gcc/bin/:\${PATH}" >> ${HOME}/.bashrc
-	echo "Updated: ${HOME}/.bashrc"
-	echo "Please do following command:"
-	echo "source ${HOME}/.bashrc"
-else
-	echo "INFO: .bashrc already has athrill-gcc path:"
-	grep "athrill-gcc-package" ${HOME}/.bashrc
-fi
