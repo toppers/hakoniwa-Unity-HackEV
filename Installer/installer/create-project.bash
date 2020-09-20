@@ -6,7 +6,9 @@ then
 	exit 1
 fi
 
-bash installer/utils/create_empty.bash ${1} 
+source config/config.bash
+
+bash ${INS_DIR}/utils/create_empty.bash ${1} 
 
 echo "### create config.json for unity"
 bash config/scripts/create_config.bash ${1} unity

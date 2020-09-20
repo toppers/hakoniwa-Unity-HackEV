@@ -1,7 +1,8 @@
 #!/bin/bash
 export OS_TYPE=`uname`
 export SIM_DIR=`pwd`/simulator
-export INS_DIR=`pwd`/installer
+export WORK_DIR=`pwd`
+export INS_DIR=${WORK_DIR}/../Installer/installer
 export CFG_DIR=`pwd`/config
 export ROOT_DIR=`pwd`
 export EV3RT_DIR=${SIM_DIR}/ev3rt-athrill-v850e2m

@@ -4,7 +4,7 @@ source env/env.bash
 
 cd simulator
 
-TOOL_DIR=../installer/utils
+TOOL_DIR=${INS_DIR}/utils
 
 which athrill2 > /dev/null
 if [ $? -ne 0 ]

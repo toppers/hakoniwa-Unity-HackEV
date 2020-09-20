@@ -8,7 +8,7 @@ then
 fi
 
 echo "### Importing sample"
-bash installer/utils/sample_import.bash ${1} 
+bash ${INS_DIR}/utils/sample_import.bash ${1} 
 
 echo "### create config.json for unity"
 bash config/scripts/create_config.bash ${1} unity
