@@ -32,3 +32,8 @@ sysinfo.txt
 .vs
 Release/
 Debug/
+
+# Installer created dir/files
+Installer/downloads/
+Installer/tools/
+Installer/simulator/
