@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source config/config.bash
 
 if [ $# -ne 1 ]
 then

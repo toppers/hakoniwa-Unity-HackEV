@@ -38,7 +38,7 @@ if [ $? -ne 0 ]
     if [ $? -ne 0 ]
     then
       echo "INFO: Please do following 2 commands to setup athrill & athrill-gcc paths"
-      echo "echo \"export PATH=\`pwd\`/athrill/bin/linux/:${ATHRILL_GCC_PATH}/athrill-gcc-package/usr/local/athrill-gcc/bin/:\${PATH}\" >> \${HOME}/.bashrc"
+      echo "echo \"export PATH=\`pwd\`/simulator/athrill/bin/linux/:${ATHRILL_GCC_PATH}/athrill-gcc-package/usr/local/athrill-gcc/bin/:\\\${PATH}\" >> \${HOME}/.bashrc"
       echo "source ${HOME}/.bashrc"
 
     else
@@ -46,7 +46,7 @@ if [ $? -ne 0 ]
       grep "athrill-gcc-package" ${HOME}/.bashrc
       echo ""
       echo "INFO: Please do following 2 commands to setup athrill path"
-      echo "echo \"export PATH=\`pwd\`/athrill/bin/linux/:\${PATH}\" >> \${HOME}/.bashrc"
+      echo "echo \"export PATH=\`pwd\`/simulator/athrill/bin/linux/:\\\${PATH}\" >> \${HOME}/.bashrc"
       echo "source ${HOME}/.bashrc"
     fi
 
@@ -58,7 +58,7 @@ if [ $? -ne 0 ]
       grep "athrill/bin/linux/" ${HOME}/.bashrc
       echo ""
       echo "INFO: Please do following 2 commands to setup athrill-gcc path"
-	    echo "echo \"export PATH=${ATHRILL_GCC_PATH}/athrill-gcc-package/usr/local/athrill-gcc/bin/:\${PATH}\" >> ${HOME}/.bashrc"
+	  echo "echo \"export PATH=${ATHRILL_GCC_PATH}/athrill-gcc-package/usr/local/athrill-gcc/bin/:\\\${PATH}\" >> ${HOME}/.bashrc"
       echo "source ${HOME}/.bashrc"
 
     else
