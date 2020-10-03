@@ -1,12 +1,19 @@
 #!/bin/bash
 
 CPU_MODE=CPU
-if [ $# -eq 1 ]
+if [ $# -ne 1 -a $# -ne 2 ]
+then
+    echo "Usage: $0 apl name [debug]"
+    exit 1
+fi
+if [ $# -eq 2 ]
 then
     CPU_MODE=DEBUG
 fi
 
 source config/config.bash
+
+APL_NAME=${1}
 
 if [ -d ${EV3RT_DIR}/sdk/workspace/${APL_NAME} ]
 then

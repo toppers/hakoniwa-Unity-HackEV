@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source config/config.bash
+#source config/config.bash
 
 export COMM_TYPE="udp"
 export ATHRILL_IP_ADDR="127.0.0.1"
