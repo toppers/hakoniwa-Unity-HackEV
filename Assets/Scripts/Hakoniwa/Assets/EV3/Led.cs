@@ -19,7 +19,7 @@ namespace Hakoniwa.Assets.EV3
 
         public void SetLedColor(LedColor color)
         {
-            Debug.Log("color=" +color);
+            //Debug.Log("color=" +color);
             rend.material.color = materials[(int)color].color;
         }
     }

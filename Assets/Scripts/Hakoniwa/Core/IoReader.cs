@@ -49,7 +49,7 @@ namespace Hakoniwa.Core
         }
         public void SetCallback(IoReaderCallback func)
         {
-            Debug.Log("io=" + this.io + ":func=" + func);
+            //Debug.Log("io=" + this.io + ":func=" + func);
             this.io.SetCallback(func);
         }
         public void DoRun()

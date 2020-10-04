@@ -8,8 +8,8 @@ namespace Hakoniwa.Assets.EV3
 {
     public class UltrasonicSensor : MonoBehaviour, IRobotUltraSonicSensor
     {
-        private float contact_distance = 30; /* centimeters/10 */
-        public float distanceValue; /* centimeters/10 */
+        private float contact_distance = 250f; /* cm */
+        public float distanceValue; /* cm */
         private GameObject frontSensor;
 
         public void Initialize(GameObject root)
@@ -20,11 +20,12 @@ namespace Hakoniwa.Assets.EV3
 
         public float GetDistanceValue()
         {
-            if ((this.distanceValue < 0.3) || (this.distanceValue > 24.9))
+            if ((this.distanceValue < 3) || (this.distanceValue > 249))
             {
                 return 255;
             }
-            return distanceValue * 10; /* centimeters */
+            //Debug.Log("distance=" + this.distanceValue);
+            return distanceValue * 1; /* centimeters */
         }
         public void UpdateSensorValues()
         {
