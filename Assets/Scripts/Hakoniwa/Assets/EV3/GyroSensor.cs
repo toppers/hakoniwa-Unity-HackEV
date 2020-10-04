@@ -10,7 +10,7 @@ namespace Hakoniwa.Assets.EV3
     {
         private GameObject obj;
         private Vector3 baseRotation;
-        private Vector3 prevRotation;
+        private Vector3 prevRotation; 
         private float deg_rate;
         private float deltaTime;
         private bool hasResetEvent;
@@ -33,7 +33,21 @@ namespace Hakoniwa.Assets.EV3
 
         public float GetDegree()
         {
-            float diff = this.obj.transform.eulerAngles.x - this.baseRotation.x;
+
+            Debug.LogFormat("current : {0}, base :  {1}", this.obj.transform.eulerAngles.y, this.baseRotation.y);
+            float diff = this.obj.transform.eulerAngles.y - this.baseRotation.y;
+
+            if (diff > 180) {
+                diff -= 360f;
+            }
+
+            if (diff < -180) {
+                diff += 360f;
+            }
+
+            return diff;
+
+            /*
             if (diff <= 180.0f)
             {
                 return (diff);
@@ -42,6 +56,7 @@ namespace Hakoniwa.Assets.EV3
             {
                 return (diff - 360.0f);
             }
+            */
         }
 
         public float GetDegreeRate()
@@ -56,7 +71,7 @@ namespace Hakoniwa.Assets.EV3
                 this.baseRotation = this.obj.transform.eulerAngles;
                 this.hasResetEvent = false;
             }
-            float diff = this.obj.transform.eulerAngles.x - this.prevRotation.x;
+            float diff = this.obj.transform.eulerAngles.y - this.prevRotation.y;
             this.deg_rate = diff / this.deltaTime;
             this.prevRotation = this.obj.transform.eulerAngles;
             //Debug.Log("deg=" + (int)this.GetDegree() + ":deg_rate=" + (int)this.deg_rate);
