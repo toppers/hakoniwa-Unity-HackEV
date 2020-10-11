@@ -35,8 +35,8 @@ fi
 
 if [ ${CPU_MODE} = "CPU" ]
 then
-    athrill2 -c1 -t -1 -m memory_mmap.txt -d device_config_mmap.txt ../asp
+    athrill2 -c1 -t -1 -m memory.txt -d device_config.txt ../asp
 else
-    athrill2 -c1 -i -m memory_mmap.txt -d device_config_mmap.txt ../asp
+    athrill2 -c1 -i -m memory.txt -d device_config.txt ../asp
 fi
 
