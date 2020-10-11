@@ -1,0 +1,20 @@
+FROM ubuntu:18.04 as athrill-v850-runner
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+        git \
+        build-essential
+
+WORKDIR /root
+RUN git clone --depth 1 https://github.com/toppers/athrill.git && \
+    git clone --depth 1 https://github.com/toppers/athrill-target-v850e2m.git
+WORKDIR /root/athrill-target-v850e2m/build_linux
+RUN make clean && \
+    make -f Makefile.static
+
+RUN echo 'export PATH=/root/athrill/bin/linux:${PATH}' >> ~/.bashrc
+RUN mkdir workspace
+WORKDIR /root
+
+COPY ./utils/start-athrill.bash  .
