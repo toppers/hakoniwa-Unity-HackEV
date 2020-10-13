@@ -77,13 +77,23 @@ namespace Hakoniwa.Assets.EV3
         {
             return this.deg;
         }
+
+        private float Map360To180(float degree)
+        {
+            if (degree < 180.0f)
+            {
+                return degree;
+            }
+
+            return degree - 360.0f;
+        }
         public void UpdateSensorValues()
         {
-            float diff = 0;
-            diff = Quaternion.Angle(this.obj.transform.localRotation, this.prevRotation);
+            float diff;
+            var diff_rot = this.obj.transform.localRotation * Quaternion.Inverse(this.prevRotation);
+            diff = Map360To180(diff_rot.eulerAngles.x);
             this.prevRotation = this.obj.transform.localRotation;
             this.deg += diff;
-
         }
     }
 }
