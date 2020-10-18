@@ -7,7 +7,7 @@ then
 fi
 
 WORKSPACE_DIR=`pwd`/simulator
-DOCKER_IMAGE=hako/athrill-v850:v1.1.1
+DOCKER_IMAGE=kanetugu2015/athrill-v850:v1.1.1
 
 echo "APL_NAME=${1}" > ./env.txt
 
