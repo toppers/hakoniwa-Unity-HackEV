@@ -57,5 +57,9 @@ namespace Hakoniwa.Assets.SimpleRobot
         {
             return null;
         }
+        public string getGpsSensor()
+        {
+            return null;
+        }
     }
 }

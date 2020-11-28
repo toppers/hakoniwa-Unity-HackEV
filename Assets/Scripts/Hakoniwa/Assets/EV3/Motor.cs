@@ -94,6 +94,7 @@ namespace Hakoniwa.Assets.EV3
             diff = Map360To180(diff_rot.eulerAngles.x);
             this.prevRotation = this.obj.transform.localRotation;
             this.deg += diff;
+
         }
     }
 }

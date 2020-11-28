@@ -46,6 +46,11 @@ namespace Hakoniwa.Core
         {
             /* nothing to do */
         }
+
+        public void SetData64(int off, double data)
+        {
+            this.accessor.Write<double>(off, ref data);
+        }
     }
 
 }

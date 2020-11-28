@@ -75,6 +75,12 @@ namespace Hakoniwa.Core
             client.Send(byte_array, comm_size * 4);
         }
 
+        public void SetData64(int off, double data)
+        {
+            double[] double_array = new double[1];
+            double_array[0] = data;
+            Buffer.BlockCopy(double_array, 0, buffer, off / 4, 8);
+        }
     }
 }
 
