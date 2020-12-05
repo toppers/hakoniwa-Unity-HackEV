@@ -10,12 +10,12 @@ namespace Hakoniwa.Assets.HackEV
     {
         private string motor_a = "LeftTire";
         private string motor_b = "RightTire";
-        private string color_sensor = "ColorSensor/Camera";
+        private string color_sensor = "ArmMotor/ArmAxis/ColorSensor/Camera";
         private string ultra_sonic_sensor = "Axis/Body/UltraSonicSensor";
         private string gyro_sensor = null;
         private string motor_arm = "ArmMotor";
         private string touch_sensor0 = null;
-        private string touch_sensor1 = "ColorSensor/FrontTouchSensor";
+        private string touch_sensor1 = "ArmMotor/ArmAxis/ColorSensor/FrontTouchSensor";
         private string led = "Axis/Body/LED";
 
         public string GetColorSensor()
@@ -59,6 +59,11 @@ namespace Hakoniwa.Assets.HackEV
         public string GetLed()
         {
             return led;
+        }
+
+        public string getGpsSensor()
+        {
+            return null;
         }
     }
 }
