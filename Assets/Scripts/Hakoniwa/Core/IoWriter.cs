@@ -53,7 +53,15 @@ namespace Hakoniwa.Core
             Debug.Log("params=" + bufferParams);
             return;
         }
-
+        public void Set(string name, double value1)
+        {
+            int off = bufferParams.GetSensorOffset(name);
+            if (off > 0)
+            {
+                //Debug.Log("off=" + off + ": value=" + value1);
+                io.SetData64(off, value1);
+            }
+        }
 
         public void Set(string name, int value1)
         {

@@ -17,6 +17,7 @@ namespace Hakoniwa.Assets.HackEV
         private string touch_sensor0 = "RoboModel_Axis/HackEV_L9_Sidewinder_ShoulderSensor/HackEV_L8_TouchSensor2/L8_DoubleBevelGear20_Bk 1";
         private string touch_sensor1 = "RoboModel_Axis/HackEV_L6_RC1_LightSensor/EV3_ColorSensor/ColorSensorCollider";
         private string led = "RoboModel_Axis/EV3_IntelligentBlock/EV3_IntelligentBlock_Root/EV3_IntelligentBlock_Ash01";
+        private string gps = "RoboModel_Axis";
 
         public string GetColorSensor()
         {
@@ -59,6 +60,10 @@ namespace Hakoniwa.Assets.HackEV
         public string GetLed()
         {
             return led;
+        }
+        public string getGpsSensor()
+        {
+            return gps;
         }
     }
 }

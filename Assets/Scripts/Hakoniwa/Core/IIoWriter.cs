@@ -10,6 +10,7 @@ namespace Hakoniwa.Core
     {
         void SetData(int off_byte, int data);
         void SetData64(int off, ulong data);
+        void SetData64(int off, double data);
         void Send();
     }
 }

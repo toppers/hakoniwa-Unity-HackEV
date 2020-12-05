@@ -56,5 +56,9 @@ namespace Hakoniwa.Assets.Jeep
         {
             return null;
         }
+        public string getGpsSensor()
+        {
+            return null;
+        }
     }
 }

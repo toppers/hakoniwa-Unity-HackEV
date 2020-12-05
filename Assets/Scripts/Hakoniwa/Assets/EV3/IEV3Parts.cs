@@ -15,5 +15,6 @@ namespace Hakoniwa.Assets.EV3
         string getTouchSensor0();
         string getTouchSensor1();
         string getGyroSensor();
+        string getGpsSensor();
     }
 }

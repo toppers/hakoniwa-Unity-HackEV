@@ -27,6 +27,7 @@ namespace Hakoniwa.Assets.EV3
         private Hakoniwa.Assets.IRobotTouchSensor touchSensor0;
         private Hakoniwa.Assets.IRobotTouchSensor touchSensor1;
         private Hakoniwa.Assets.IRobotGyroSensor gyroSensor;
+        private Hakoniwa.Assets.IRobotGpsSensor gpsSensor;
         private Hakoniwa.Assets.IRobotLed led;
         private bool isConnected;
         private ulong micon_simtime;
@@ -147,6 +148,7 @@ namespace Hakoniwa.Assets.EV3
                     led.Initialize(obj);
                 }
             }
+
         }
         private void InitSensor()
         {
@@ -187,6 +189,16 @@ namespace Hakoniwa.Assets.EV3
                     obj = root.transform.Find(this.transform.name + "/" + this.parts.getGyroSensor()).gameObject;
                     gyroSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotGyroSensor>();
                     gyroSensor.Initialize(obj);
+                }
+            }
+            subParts = this.parts.getGpsSensor();
+            if (subParts != null)
+            {
+                if (root.transform.Find(this.transform.name + "/" + this.parts.getGpsSensor()) != null)
+                {
+                    obj = root.transform.Find(this.transform.name + "/" + this.parts.getGpsSensor()).gameObject;
+                    gpsSensor = obj.GetComponentInChildren<Hakoniwa.Assets.IRobotGpsSensor>();
+                    gpsSensor.Initialize(obj);
                 }
             }
         }
@@ -254,6 +266,12 @@ namespace Hakoniwa.Assets.EV3
                 gyroSensor.UpdateSensorValues();
                 this.writer.Set("gyro_degree", (int)gyroSensor.GetDegree());
                 this.writer.Set("gyro_degree_rate", (int)gyroSensor.GetDegreeRate());
+            }
+            if (gpsSensor != null)
+            {
+                gpsSensor.UpdateSensorValues();
+                this.writer.Set("gps_lon", gpsSensor.GetLongitude());
+                this.writer.Set("gps_lat", gpsSensor.GeLatitude());
             }
 
         }

@@ -34,7 +34,7 @@ namespace Hakoniwa.Assets.EV3
         public float GetDegree()
         {
 
-            Debug.LogFormat("current : {0}, base :  {1}", this.obj.transform.eulerAngles.y, this.baseRotation.y);
+            //Debug.LogFormat("current : {0}, base :  {1}", this.obj.transform.eulerAngles.y, this.baseRotation.y);
             float diff = this.obj.transform.eulerAngles.y - this.baseRotation.y;
 
             if (diff > 180) {
