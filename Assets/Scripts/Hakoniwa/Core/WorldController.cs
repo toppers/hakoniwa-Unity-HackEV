@@ -51,6 +51,10 @@ namespace Hakoniwa.Core
              * Check diff time and connection.
              */
             foreach (IAssetController asset in this.assets) {
+                this.diff_time[index] = (long)asset.GetControllerTime() - (long)this.unity_simtime;
+                this.dbgDiffTimeMsec[index] = ((double)this.diff_time[index]) / 1000;
+                this.dbgMiconStimeSec[index] = ((double)asset.GetControllerTime()) / 1000000;
+
                 if (this.diff_time[index] <= -this.maxDiffTime)
                 {
                     canStep = false;
@@ -61,6 +65,8 @@ namespace Hakoniwa.Core
                 }
                 index++;
             }
+            this.dbgUnityStimeSec = ((double)this.unity_simtime) / 1000000;
+
             /*
              * judge simulation can step
              */
@@ -84,20 +90,6 @@ namespace Hakoniwa.Core
             {
                 asset.DoPublish(this.unity_simtime);
             }
-        }
-        void Update()
-        {
-            int index = 0;
-            foreach (IAssetController asset in this.assets)
-            {
-                this.diff_time[index] = (long)asset.GetControllerTime() - (long)this.unity_simtime;
-                this.dbgDiffTimeMsec[index] = ((double)this.diff_time[index]) / 1000;
-                this.dbgMiconStimeSec[index] = ((double)asset.GetControllerTime()) / 1000000;
-                index++;
-            }
-            this.dbgUnityStimeSec = ((double)this.unity_simtime) / 1000000;
-
-
         }
         public double GetSimTime()
         {
