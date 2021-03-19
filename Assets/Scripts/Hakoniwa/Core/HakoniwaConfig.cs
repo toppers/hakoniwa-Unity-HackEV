@@ -12,6 +12,9 @@ namespace Hakoniwa.Core
     {
         public string AthrillPath;
         public string TerminalPath;
+        public string CoreIpAddr;
+        public int CorePort;
+        public string SymTimeMeasureFilePath;
         public HakoniwaRobotConfigInfo[] robots;
     }
     [System.Serializable]
@@ -61,6 +64,9 @@ namespace Hakoniwa.Core
             Debug.Log("json=" + cfg);
             Debug.Log("TerminalPath=" + cfg.TerminalPath);
             Debug.Log("AthrillPath=" + cfg.AthrillPath);
+            Debug.Log("CoreIpAddr=" + cfg.CoreIpAddr);
+            Debug.Log("CorePort=" + cfg.CorePort);
+            Debug.Log("SymTimeMeasureFilePath=" + cfg.SymTimeMeasureFilePath);
             Debug.Log("Robot=" + cfg.robots);
             for (int i = 0; i < cfg.robots.Length; i++)
             {

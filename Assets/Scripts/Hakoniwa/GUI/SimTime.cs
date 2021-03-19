@@ -1,4 +1,5 @@
 ﻿using Hakoniwa.Core;
+using Hakoniwa.Core.Simulation;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,7 +23,8 @@ namespace Hakoniwa.GUI
         // Update is called once per frame
         void Update()
         {
-            double t = this.root.GetSimTime();
+            SimulationController simulator = SimulationController.Get();
+            double t = ((double)simulator.GetWorldTime()) / 1000000.0f;
             if (t < 0.001)
             {
                 t = 0.000;

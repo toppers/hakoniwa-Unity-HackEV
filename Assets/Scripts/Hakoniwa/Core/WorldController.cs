@@ -1,100 +1,73 @@
-﻿using System.Collections;
+﻿using Hakoniwa.Core.Rpc;
+using Hakoniwa.Core.Simulation;
+using Hakoniwa.Core.Simulation.Environment;
+using Hakoniwa.Core.Utils;
+using Hakoniwa.PluggableAsset;
+using Hakoniwa.PluggableAsset.Assets;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Hakoniwa.Core
 {
+    class UnitySimulator : IInsideWorldSimulatior
+    {
+        public UnitySimulator()
+        {
+
+        }
+        public void DoSimulation()
+        {
+            Physics.Simulate(Time.fixedDeltaTime);
+        }
+    }
+
     public class WorldController : MonoBehaviour
     {
-        private long unity_simtime = 1;
-        public long maxDiffTime = 20000; /* usec */
-        public int waitCount = 0;
-        private double dbgUnityStimeSec = 0.0;
-        public long[] diff_time;
-        public double [] dbgMiconStimeSec;
-        public double [] dbgDiffTimeMsec;
-        private List<IAssetController> assets = new List<IAssetController>();
         private GameObject root;
-        private long delta_time = 0;
-
+        public long maxDelayTime = 20000; /* usec */
+        private SimulationController simulator = SimulationController.Get();
         void Start()
         {
             this.root = GameObject.Find("Robot");
-            int count = 0;
 
             HakoniwaConfig cfg = GameObject.Find("Hakoniwa").GetComponentInChildren<HakoniwaConfig>();
             cfg.Initialize();
 
-            foreach (Transform child in this.root.transform) {
-                count++;
-                Debug.Log("child=" + child.name);
-                GameObject obj = root.transform.Find(child.name).gameObject;
-                IAssetController ctrl = obj.GetComponentInChildren<Hakoniwa.Core.IAssetController >();
-                ctrl.Initialize();
-                this.assets.Add(ctrl);
-            }
-            this.diff_time = new long[count];
-            this.dbgMiconStimeSec = new double[count];
-            this.dbgDiffTimeMsec = new double[count];
-            this.delta_time = (long)(Time.fixedDeltaTime * 1000000f);
-            Physics.autoSimulation = false;
-        }
-
-        public bool isConnected = true;
-        public bool canStep = true;
-        void FixedUpdate()
-        {
-            int index = 0;
-            isConnected = true;
-            canStep = true;
-            /*
-             * Check diff time and connection.
-             */
-            foreach (IAssetController asset in this.assets) {
-                this.diff_time[index] = (long)asset.GetControllerTime() - (long)this.unity_simtime;
-                this.dbgDiffTimeMsec[index] = ((double)this.diff_time[index]) / 1000;
-                this.dbgMiconStimeSec[index] = ((double)asset.GetControllerTime()) / 1000000;
-
-                if (this.diff_time[index] <= -this.maxDiffTime)
-                {
-                    canStep = false;
-                }
-                if (!asset.IsConnected())
-                {
-                    isConnected = false;
-                }
-                index++;
-            }
-            this.dbgUnityStimeSec = ((double)this.unity_simtime) / 1000000;
-
-            /*
-             * judge simulation can step
-             */
-            if (isConnected && canStep)
+            if (cfg.cfg.CoreIpAddr != null)
             {
-                this.unity_simtime += this.delta_time;
-                foreach (IAssetController asset in this.assets)
-                {
-                    asset.DoUpdate();
-                }
-                Physics.Simulate(Time.fixedDeltaTime);
+                Debug.Log("HakoniwaCore START");
+                RpcServer.StartServer(cfg.cfg.CoreIpAddr, cfg.cfg.CorePort);
+                simulator.RegisterEnvironmentOperation(new UnityEnvironmentOperation());
+                simulator.SaveEnvironment();
+                simulator.GetLogger().SetFilePath(cfg.cfg.SymTimeMeasureFilePath);
             }
             else
             {
-                waitCount++;
+                Debug.LogError("HakoniwaCore NONE");
             }
-            /*
-             * publish hakoniwa time
-             */
-            foreach (IAssetController asset in this.assets)
+            AssetConfiguration.Load();
+            foreach (Transform child in this.root.transform)
             {
-                asset.DoPublish(this.unity_simtime);
+                Debug.Log("child=" + child.name);
+                GameObject obj = root.transform.Find(child.name).gameObject;
+                IInsideAssetController ctrl = obj.GetComponentInChildren<IInsideAssetController>();
+                AssetConfiguration.AddInsideAsset(ctrl);
+                simulator.asset_mgr.RegisterInsideAsset(child.name);
+
+                ctrl.Initialize();
             }
+
+            simulator.SetSimulationWorldTime(
+                this.maxDelayTime,
+                (long)(Time.fixedDeltaTime * 1000000f));
+            simulator.SetInsideWorldSimulator(new UnitySimulator());
+            Physics.autoSimulation = false;
         }
-        public double GetSimTime()
+        void FixedUpdate()
         {
-            return this.dbgUnityStimeSec;
+            this.simulator.Execute();
         }
     }
 }
-

@@ -8,13 +8,13 @@ using UnityEngine;
 
 namespace Hakoniwa.GUI
 {
-    public class SimStart : MonoBehaviour
+    public class SimReset : MonoBehaviour
     {
   
         public void OnButtonClick()
         {
-            SimulationController simulatgor = SimulationController.Get();
-            simulatgor.Start();
+            SimulationController simulator = SimulationController.Get();
+            simulator.RestoreEnvironment();
         }
     }
 }
