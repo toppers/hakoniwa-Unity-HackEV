@@ -14,7 +14,7 @@ namespace Hakoniwa.GUI
         public void OnButtonClick()
         {
             SimulationController simulator = SimulationController.Get();
-            simulator.RestoreEnvironment();
+            simulator.Reset();
         }
     }
 }

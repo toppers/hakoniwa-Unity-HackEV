@@ -37,13 +37,14 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
 
         private IPduReader pdu_reader;
         private IPduWriter pdu_writer;
+        private string my_name = null;
         public void Initialize()
         {
             Debug.Log("Enter Robomodel");
             this.root = GameObject.Find("Robot");
             this.myObject = GameObject.Find("Robot/" + this.transform.name);
             this.parts = myObject.GetComponentInChildren<IEV3Parts>();
-
+            this.my_name = string.Copy(this.transform.name);
             this.InitActuator();
             this.InitSensor();
             this.pdu_io = PduIoConnector.Get(this.GetName());
@@ -52,7 +53,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
         }
         public string GetName()
         {
-            return this.transform.name;
+            return this.my_name;
         }
 
         public void DoActuation()

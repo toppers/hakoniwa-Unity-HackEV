@@ -7,6 +7,7 @@ using Hakoniwa.PluggableAsset.Assets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace Hakoniwa.Core
@@ -31,32 +32,29 @@ namespace Hakoniwa.Core
         void Start()
         {
             this.root = GameObject.Find("Robot");
+#if UNITY_EDITOR
+            string filePath = Directory.GetCurrentDirectory();
+#else
+            string filePath = AppDomain.CurrentDomain.BaseDirectory;
+#endif
+            Debug.Log(filePath);
+            string configPath = filePath + System.IO.Path.DirectorySeparatorChar + "core_config.json";
 
-            HakoniwaConfig cfg = GameObject.Find("Hakoniwa").GetComponentInChildren<HakoniwaConfig>();
-            cfg.Initialize();
+            AssetConfigLoader.Load(configPath);
+            Debug.Log("HakoniwaCore START");
+            RpcServer.StartServer(AssetConfigLoader.core_config.core_ipaddr, AssetConfigLoader.core_config.core_portno);
+            simulator.RegisterEnvironmentOperation(new UnityEnvironmentOperation());
+            simulator.SaveEnvironment();
+            simulator.GetLogger().SetFilePath(AssetConfigLoader.core_config.SymTimeMeasureFilePath);
 
-            if (cfg.cfg.CoreIpAddr != null)
-            {
-                Debug.Log("HakoniwaCore START");
-                RpcServer.StartServer(cfg.cfg.CoreIpAddr, cfg.cfg.CorePort);
-                simulator.RegisterEnvironmentOperation(new UnityEnvironmentOperation());
-                simulator.SaveEnvironment();
-                simulator.GetLogger().SetFilePath(cfg.cfg.SymTimeMeasureFilePath);
-            }
-            else
-            {
-                Debug.LogError("HakoniwaCore NONE");
-            }
-            AssetConfiguration.Load();
             foreach (Transform child in this.root.transform)
             {
                 Debug.Log("child=" + child.name);
                 GameObject obj = root.transform.Find(child.name).gameObject;
                 IInsideAssetController ctrl = obj.GetComponentInChildren<IInsideAssetController>();
-                AssetConfiguration.AddInsideAsset(ctrl);
-                simulator.asset_mgr.RegisterInsideAsset(child.name);
-
                 ctrl.Initialize();
+                AssetConfigLoader.AddInsideAsset(ctrl);
+                simulator.asset_mgr.RegisterInsideAsset(child.name);
             }
 
             simulator.SetSimulationWorldTime(
