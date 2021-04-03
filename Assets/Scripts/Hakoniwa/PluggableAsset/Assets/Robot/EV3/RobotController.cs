@@ -25,7 +25,8 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
         private IRobotMotorSensor motor_a_sensor;
         private IRobotMotorSensor motor_b_sensor;
         private IRobotMotorSensor motor_arm_sensor;
-        private IRobotColorSensor colorSensor;
+        private IRobotColorSensor colorSensor0;
+        private IRobotColorSensor colorSensor1;
         private IRobotUltraSonicSensor ultrasonicSensor;
         private IRobotTouchSensor touchSensor0;
         private IRobotTouchSensor touchSensor1;
@@ -128,16 +129,27 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
                 motor_arm_sensor.UpdateSensorValues();
                 this.pdu_writer.SetData("motor_angle_c", (int)motor_arm_sensor.GetDegree());
             }
-            if (this.colorSensor != null)
+            if (this.colorSensor0 != null)
             {
-                colorSensor.UpdateSensorValues();
-                this.pdu_writer.SetData("sensor_reflect", (int)(this.colorSensor.GetLightValue() * 100f));
+                colorSensor0.UpdateSensorValues();
+                this.pdu_writer.SetData("sensor_reflect0", (int)(this.colorSensor0.GetLightValue() * 100f));
                 ColorRGB color_sensor_rgb;
-                this.colorSensor.GetRgb(out color_sensor_rgb);
-                this.pdu_writer.SetData("sensor_rgb_r", color_sensor_rgb.r);
-                this.pdu_writer.SetData("sensor_rgb_g", color_sensor_rgb.g);
-                this.pdu_writer.SetData("sensor_rgb_b", color_sensor_rgb.b);
-                this.pdu_writer.SetData("sensor_color", (int)this.colorSensor.GetColorId());
+                this.colorSensor0.GetRgb(out color_sensor_rgb);
+                this.pdu_writer.SetData("sensor_rgb_r0", color_sensor_rgb.r);
+                this.pdu_writer.SetData("sensor_rgb_g0", color_sensor_rgb.g);
+                this.pdu_writer.SetData("sensor_rgb_b0", color_sensor_rgb.b);
+                this.pdu_writer.SetData("sensor_color0", (int)this.colorSensor0.GetColorId());
+            }
+            if (this.colorSensor1 != null)
+            {
+                colorSensor1.UpdateSensorValues();
+                this.pdu_writer.SetData("sensor_reflect1", (int)(this.colorSensor1.GetLightValue() * 100f));
+                ColorRGB color_sensor_rgb;
+                this.colorSensor1.GetRgb(out color_sensor_rgb);
+                this.pdu_writer.SetData("sensor_rgb_r1", color_sensor_rgb.r);
+                this.pdu_writer.SetData("sensor_rgb_g1", color_sensor_rgb.g);
+                this.pdu_writer.SetData("sensor_rgb_b1", color_sensor_rgb.b);
+                this.pdu_writer.SetData("sensor_color1", (int)this.colorSensor1.GetColorId());
             }
             if (this.ultrasonicSensor != null)
             {
@@ -233,12 +245,19 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
         private void InitSensor()
         {
             GameObject obj;
-            string subParts = this.parts.GetColorSensor();
+            string subParts = this.parts.GetColorSensor0();
             if (subParts != null)
             {
-                obj = root.transform.Find(this.transform.name + "/" + this.parts.GetColorSensor()).gameObject;
-                colorSensor = obj.GetComponentInChildren<IRobotColorSensor>();
-                colorSensor.Initialize(obj);
+                obj = root.transform.Find(this.transform.name + "/" + this.parts.GetColorSensor0()).gameObject;
+                colorSensor0 = obj.GetComponentInChildren<IRobotColorSensor>();
+                colorSensor0.Initialize(obj);
+            }
+            subParts = this.parts.GetColorSensor1();
+            if (subParts != null)
+            {
+                obj = root.transform.Find(this.transform.name + "/" + this.parts.GetColorSensor1()).gameObject;
+                colorSensor1 = obj.GetComponentInChildren<IRobotColorSensor>();
+                colorSensor1.Initialize(obj);
             }
             subParts = this.parts.getUltraSonicSensor();
             if (subParts != null)

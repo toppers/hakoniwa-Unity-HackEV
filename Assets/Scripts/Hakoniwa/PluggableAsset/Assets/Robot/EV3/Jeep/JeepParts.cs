@@ -10,12 +10,16 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.Jeep
     {
         private string motor_a = "Jeep_Axle/Wheel_Front_Left";
         private string motor_b = "Jeep_Axle/Wheel_Front_Right";
-        private string color_sensor = "Jeep_Axle/LineTraceSensorHolder/ColorSensor";
+        private string color_sensor0 = "Jeep_Axle/LineTraceSensorHolder/ColorSensor";
         private string ultra_sonic_sensor = "Jeep_Axle/UltrasonicSensor";
 
-        public string GetColorSensor()
+        public string GetColorSensor0()
         {
-            return color_sensor;
+            return color_sensor0;
+        }
+        public string GetColorSensor1()
+        {
+            return null;
         }
 
         public string GetMotorA()

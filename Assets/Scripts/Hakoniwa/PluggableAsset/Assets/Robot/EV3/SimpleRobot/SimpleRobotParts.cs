@@ -11,15 +11,19 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.SimpleRobot
     {
         private string motor_a = "Tire1";
         private string motor_b = "Tire2";
-        private string color_sensor = "Axle/SensorHolder/SensorBox/ColorSensor";
+        private string color_sensor0 = "Axle/SensorHolder/SensorBox/ColorSensor";
         private string ultra_sonic_sensor = "Axle/SensorHolder/SensorBox/UltrasonicSensor";
         private string touch_sensor0 = "Axle/TouchSensor";
         private string gyro_sensor = "Axle/GyroSensor";
         private string motor_arm = "Axle/Arm/ArmMotor";
 
-        public string GetColorSensor()
+        public string GetColorSensor0()
         {
-            return color_sensor;
+            return color_sensor0;
+        }
+        public string GetColorSensor1()
+        {
+            return null;
         }
 
         public string GetMotorA()

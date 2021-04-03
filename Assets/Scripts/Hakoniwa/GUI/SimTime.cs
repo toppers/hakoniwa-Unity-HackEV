@@ -24,10 +24,11 @@ namespace Hakoniwa.GUI
         void Update()
         {
             SimulationController simulator = SimulationController.Get();
-            double t = ((double)simulator.GetWorldTime()) / 1000000.0f;
-            if (t < 0.001)
+            long simtime = simulator.GetWorldTime();
+            double t = ((double)simtime) / 1000000.0f;
+            if (simtime <= 1)
             {
-                t = 0.000;
+                simTimeText.text = "0.000";
             }
             else
             {

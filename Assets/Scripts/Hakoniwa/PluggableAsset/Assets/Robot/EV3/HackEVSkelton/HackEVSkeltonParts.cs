@@ -9,7 +9,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.HackEV
     {
         private string motor_a = "LeftTire";
         private string motor_b = "RightTire";
-        private string color_sensor = "ArmMotor/ArmAxis/ColorSensor/Camera";
+        private string color_sensor0 = "ArmMotor/ArmAxis/ColorSensor/Camera";
         private string ultra_sonic_sensor = "Axis/Body/UltraSonicSensor";
         private string gyro_sensor = null;
         private string motor_arm = "ArmMotor";
@@ -17,9 +17,9 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.HackEV
         private string touch_sensor1 = "ArmMotor/ArmAxis/ColorSensor/FrontTouchSensor";
         private string led = "Axis/Body/LED";
 
-        public string GetColorSensor()
+        public string GetColorSensor0()
         {
-            return color_sensor;
+            return color_sensor0;
         }
 
         public string GetMotorA()
@@ -61,6 +61,11 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.HackEV
         }
 
         public string getGpsSensor()
+        {
+            return null;
+        }
+
+        public string GetColorSensor1()
         {
             return null;
         }

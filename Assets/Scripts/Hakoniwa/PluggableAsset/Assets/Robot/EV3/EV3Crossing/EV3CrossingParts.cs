@@ -9,11 +9,6 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3Crossing
     {
         private string motor_arm = "EV3GuardHolder";
 
-        public string GetColorSensor()
-        {
-            return null;
-        }
-
         public string getGyroSensor()
         {
             return null;
@@ -54,6 +49,16 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3Crossing
             return null;
         }
         public string getGpsSensor()
+        {
+            return null;
+        }
+
+        public string GetColorSensor0()
+        {
+            return null;
+        }
+
+        public string GetColorSensor1()
         {
             return null;
         }

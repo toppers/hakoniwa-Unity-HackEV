@@ -9,7 +9,8 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.HackEV
     {
         private string motor_a = "HackEV_L8_LeftMotor/HackEV_L8_Wheel2/L8_Tire_Bk";
         private string motor_b = "HackEV_L8_RightMotor/HackEV_L8_Wheel/L8_Tire_Bk 1";
-        private string color_sensor = "EV3_InteractiveServoMotor_L_MotorRoot/EV3_ArmMort_Axis/HackEV_L6_RC1_LightSensor/EV3_ColorSensor/EV3_ColorSensor_Wh06/ColorSensor";
+        private string color_sensor0 = "EV3_InteractiveServoMotor_L_MotorRoot/EV3_ArmMort_Axis/HackEV_L6_RC1_LightSensor/EV3_ColorSensor/EV3_ColorSensor_Wh06/ColorSensor";
+        private string color_sensor1 = null;
         private string ultra_sonic_sensor = "RoboModel_Axis/Body/HackEV_L8_Sidewinder_Head/EV3_UltrasonicSensor/EV3_UltrasonicSensor_Bk10";
         private string gyro_sensor = "RoboModel_Axis/Body/HackEV_L8_Sidewinder_Head/EV3_GyroSensor/EV3_GyroSensor_Ash01";
         private string motor_arm = "EV3_InteractiveServoMotor_L_MotorRoot";
@@ -17,11 +18,6 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.HackEV
         private string touch_sensor1 = "EV3_InteractiveServoMotor_L_MotorRoot/EV3_ArmMort_Axis/HackEV_L6_RC1_LightSensor/EV3_ColorSensor/ColorSensorCollider";
         private string led = "RoboModel_Axis/Body/EV3_IntelligentBlock/EV3_IntelligentBlock_Root/EV3_IntelligentBlock_Ash01";
         private string gps = "RoboModel_Axis";
-
-        public string GetColorSensor()
-        {
-            return color_sensor;
-        }
 
         public string GetMotorA()
         {
@@ -63,6 +59,16 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.HackEV
         public string getGpsSensor()
         {
             return gps;
+        }
+
+        public string GetColorSensor0()
+        {
+            return color_sensor0;
+        }
+
+        public string GetColorSensor1()
+        {
+            return color_sensor1;
         }
     }
 }
