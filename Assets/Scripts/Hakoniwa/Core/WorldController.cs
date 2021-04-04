@@ -2,6 +2,7 @@
 using Hakoniwa.Core.Simulation;
 using Hakoniwa.Core.Simulation.Environment;
 using Hakoniwa.Core.Utils;
+using Hakoniwa.Core.Utils.Logger;
 using Hakoniwa.PluggableAsset;
 using Hakoniwa.PluggableAsset.Assets;
 using System;
@@ -29,7 +30,7 @@ namespace Hakoniwa.Core
         private GameObject root;
         public long maxDelayTime = 20000; /* usec */
         private SimulationController simulator = SimulationController.Get();
-        void Start()
+        private void InitHakoniwa()
         {
             this.root = GameObject.Find("Robot");
 #if UNITY_EDITOR
@@ -63,9 +64,29 @@ namespace Hakoniwa.Core
             simulator.SetInsideWorldSimulator(new UnitySimulator());
             Physics.autoSimulation = false;
         }
+        void Start()
+        {
+            try
+            {
+                this.InitHakoniwa();
+            }
+            catch (Exception e)
+            {
+                SimpleLogger.Get().Log(Level.ERROR, e);
+                throw e;
+            }
+        }
         void FixedUpdate()
         {
+            try
+        {
             this.simulator.Execute();
+        }
+            catch (Exception e)
+            {
+                SimpleLogger.Get().Log(Level.ERROR, e);
+                throw e;
+            }
         }
     }
 }

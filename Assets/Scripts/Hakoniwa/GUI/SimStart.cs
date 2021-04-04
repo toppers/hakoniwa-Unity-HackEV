@@ -14,13 +14,14 @@ namespace Hakoniwa.GUI
     {
         Text my_text;
         Button my_btn;
+        bool isResetHappened = false;
         private enum SimCommandStatus
         {
-            Start = 0,
-            Stop = 2,
-            Reset = 3,
+            WaitStart = 0,
+            WaitStop = 1,
+            WaitReset = 2,
         }
-        private SimCommandStatus cmd_status = SimCommandStatus.Start;
+        private SimCommandStatus cmd_status = SimCommandStatus.WaitStart;
 
         void Start()
         {
@@ -29,10 +30,15 @@ namespace Hakoniwa.GUI
             my_text = obj.GetComponentInChildren<Text>();
             my_btn.interactable = false;
         }
+        public void ResetEvent()
+        {
+            isResetHappened = true;
+        }
         void Update()
         {
             SimulationController simulator = SimulationController.Get();
             var state = simulator.GetState();
+#if false
             if (cmd_status == SimCommandStatus.Stop)
             {
                 if (state == SimulationState.Running)
@@ -55,28 +61,67 @@ namespace Hakoniwa.GUI
                     my_btn.interactable = true;
                 }
             }
+#else
+            //button enabler
+            int count = simulator.asset_mgr.RefOutsideAssetList().Count;
+            if (count == 0)
+            {
+                my_btn.interactable = false;
+            }
+            else if ((state != SimulationState.Running) && (state != SimulationState.Stopped))
+            {
+                my_btn.interactable = false;
+                return;
+            }
+            else
+            {
+                my_btn.interactable = true;
+            }
+            //cmd status changer
+            switch (cmd_status)
+            {
+                case SimCommandStatus.WaitStart:
+                    if (state == SimulationState.Running)
+                    {
+                        my_text.text = "停止";
+                        cmd_status = SimCommandStatus.WaitStop;
+                    }
+                    isResetHappened = false;
+                    break;
+                case SimCommandStatus.WaitStop:
+                    if (state == SimulationState.Stopped)
+                    {
+                        my_text.text = "リセット";
+                        cmd_status = SimCommandStatus.WaitReset;
+                    }
+                    break;
+                case SimCommandStatus.WaitReset:
+                    if (isResetHappened)
+                    {
+                        my_text.text = "開始";
+                        cmd_status = SimCommandStatus.WaitStart;
+                    }
+                    break;
+                default:
+                    break;
+            }
+#endif
         }
         public void OnButtonClick()
         {
             SimulationController simulator = SimulationController.Get();
             switch (cmd_status)
             {
-                case SimCommandStatus.Stop:
+                case SimCommandStatus.WaitStop:
                     simulator.Stop();
-                    cmd_status = SimCommandStatus.Reset;
-                    my_text.text = "リセット";
                     my_btn.interactable = false; 
                     break;
-                case SimCommandStatus.Reset:
+                case SimCommandStatus.WaitReset:
                     simulator.Reset();
-                    cmd_status = SimCommandStatus.Start;
-                    my_text.text = "開始";
                     my_btn.interactable = false;
                     break;
-                case SimCommandStatus.Start:
+                case SimCommandStatus.WaitStart:
                     simulator.Start();
-                    cmd_status = SimCommandStatus.Stop;
-                    my_text.text = "停止";
                     my_btn.interactable = false;
                     break;
                 default:

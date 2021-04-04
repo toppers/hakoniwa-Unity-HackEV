@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hakoniwa.GUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,9 +12,13 @@ namespace Hakoniwa.Core.Simulation.Environment
     class UnityEnvironmentOperation : IEnvironmentOperation
     {
         private GameObject root;
+        private SimStart event_button;
+
         public UnityEnvironmentOperation()
         {
             this.root = GameObject.Find("Robot");
+            var obj = GameObject.Find("StartButton");
+            event_button = obj.GetComponentInChildren<SimStart>();
         }
         private Rigidbody[] rigidbodies;
         private Vector3[] initial_pos;
@@ -42,16 +47,6 @@ namespace Hakoniwa.Core.Simulation.Environment
         }
         public void Restore()
         {
-#if false
-            Physics.autoSimulation = false;
-            foreach (Transform child in this.root.transform)
-            {
-                Debug.Log("child=" + child.name);
-                GameObject obj = root.transform.Find(child.name).gameObject;
-                IAssetController ctrl = obj.GetComponentInChildren<Hakoniwa.Core.IAssetController>();
-                //ctrl.Stop();
-            }
-#endif
 
             //set iskinematic true
             foreach (var rigidbody in this.rigidbodies)
@@ -74,15 +69,7 @@ namespace Hakoniwa.Core.Simulation.Environment
                 rigidbody.detectCollisions = this.initial_collitions[i];
                 i++;
             }
-#if false
-            foreach (Transform child in this.root.transform)
-            {
-                //Debug.Log("child=" + child.name);
-                GameObject obj = root.transform.Find(child.name).gameObject;
-                IAssetController ctrl = obj.GetComponentInChildren<Hakoniwa.Core.IAssetController>();
-                //ctrl.Restart();
-            }
-#endif
+            this.event_button.ResetEvent();
         }
 
     }
