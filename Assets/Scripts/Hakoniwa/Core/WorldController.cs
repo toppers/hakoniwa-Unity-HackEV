@@ -55,8 +55,9 @@ namespace Hakoniwa.Core
                 IInsideAssetController ctrl = obj.GetComponentInChildren<IInsideAssetController>();
                 ctrl.Initialize();
                 AssetConfigLoader.AddInsideAsset(ctrl);
-                simulator.asset_mgr.RegisterInsideAsset(child.name);
+                simulator.RegisterInsideAsset(child.name);
             }
+
 
             simulator.SetSimulationWorldTime(
                 this.maxDelayTime,
@@ -79,9 +80,9 @@ namespace Hakoniwa.Core
         void FixedUpdate()
         {
             try
-        {
-            this.simulator.Execute();
-        }
+            {
+                this.simulator.Execute();
+            }
             catch (Exception e)
             {
                 SimpleLogger.Get().Log(Level.ERROR, e);

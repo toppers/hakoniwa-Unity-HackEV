@@ -1,5 +1,6 @@
 ﻿using Hakoniwa.Core;
 using Hakoniwa.Core.Simulation;
+using Hakoniwa.PluggableAsset;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -63,10 +64,17 @@ namespace Hakoniwa.GUI
             }
 #else
             //button enabler
-            int count = simulator.asset_mgr.RefOutsideAssetList().Count;
+            int count = simulator.RefOutsideAssetListCount();
             if (count == 0)
             {
-                my_btn.interactable = false;
+                if (AssetConfigLoader.core_config.outside_assets == null)
+                {
+                    my_btn.interactable = true;
+                }
+                else
+                {
+                    my_btn.interactable = false;
+                }
             }
             else if ((state != SimulationState.Running) && (state != SimulationState.Stopped))
             {
