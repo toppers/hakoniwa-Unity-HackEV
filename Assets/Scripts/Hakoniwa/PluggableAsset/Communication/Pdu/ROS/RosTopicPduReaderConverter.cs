@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using RosMessageTypes.Std;
 using RosMessageTypes.Hackev;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
+using RosMessageTypes.Geometry;
 
 namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
 {
@@ -40,6 +41,16 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
 			ConvertToPdu(src, dst.Ref("stamp").GetPduWriteOps());
             dst.SetData("frame_id", src.frame_id);
         }
+        private void ConvertToPdu(MImu src, IPduWriteOperation dst)
+        {
+			ConvertToPdu(src, dst.Ref("header").GetPduWriteOps());
+			ConvertToPdu(src, dst.Ref("orientation").GetPduWriteOps());
+            dst.SetData("orientation_covariance", src.orientation_covariance);
+			ConvertToPdu(src, dst.Ref("angular_velocity").GetPduWriteOps());
+            dst.SetData("angular_velocity_covariance", src.angular_velocity_covariance);
+			ConvertToPdu(src, dst.Ref("linear_acceleration").GetPduWriteOps());
+            dst.SetData("linear_acceleration_covariance", src.linear_acceleration_covariance);
+        }
         private void ConvertToPdu(MLaserScan src, IPduWriteOperation dst)
         {
 			ConvertToPdu(src, dst.Ref("header").GetPduWriteOps());
@@ -53,10 +64,23 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
             dst.SetData("ranges", src.ranges);
             dst.SetData("intensities", src.intensities);
         }
+        private void ConvertToPdu(MQuaternion src, IPduWriteOperation dst)
+        {
+            dst.SetData("x", src.x);
+            dst.SetData("y", src.y);
+            dst.SetData("z", src.z);
+            dst.SetData("w", src.w);
+        }
         private void ConvertToPdu(MTime src, IPduWriteOperation dst)
         {
             dst.SetData("secs", src.secs);
             dst.SetData("nsecs", src.nsecs);
+        }
+        private void ConvertToPdu(MVector3 src, IPduWriteOperation dst)
+        {
+            dst.SetData("x", src.x);
+            dst.SetData("y", src.y);
+            dst.SetData("z", src.z);
         }
 
         public void ConvertToPduData(IPduCommData src, IPduReader dst)
@@ -68,6 +92,12 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
             if (ros_pdu_reader.GetTypeName().Equals("LaserScan"))
             {
                 var ros_topic_data = ros_topic.GetTopicData() as MLaserScan;
+                ConvertToPdu(ros_topic_data, dst.GetWriteOps());
+                return;
+            }
+            if (ros_pdu_reader.GetTypeName().Equals("Imu"))
+            {
+                var ros_topic_data = ros_topic.GetTopicData() as MImu;
                 ConvertToPdu(ros_topic_data, dst.GetWriteOps());
                 return;
             }

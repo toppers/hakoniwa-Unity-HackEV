@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using RosMessageTypes.Std;
 using RosMessageTypes.Hackev;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
+using RosMessageTypes.Geometry;
 
 namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
 {
@@ -40,6 +41,16 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
             ConvertToMessage(src.Ref("stamp").GetPduReadOps(), dst.stamp);
 			dst.frame_id = src.GetDataString("frame_id");
         }
+        static private void ConvertToMessage(IPduReadOperation src, MImu dst)
+        {
+            ConvertToMessage(src.Ref("header").GetPduReadOps(), dst.header);
+            ConvertToMessage(src.Ref("orientation").GetPduReadOps(), dst.orientation);
+			dst.orientation_covariance = src.GetDataFloat64Array("orientation_covariance");
+            ConvertToMessage(src.Ref("angular_velocity").GetPduReadOps(), dst.angular_velocity);
+			dst.angular_velocity_covariance = src.GetDataFloat64Array("angular_velocity_covariance");
+            ConvertToMessage(src.Ref("linear_acceleration").GetPduReadOps(), dst.linear_acceleration);
+			dst.linear_acceleration_covariance = src.GetDataFloat64Array("linear_acceleration_covariance");
+        }
         static private void ConvertToMessage(IPduReadOperation src, MLaserScan dst)
         {
             ConvertToMessage(src.Ref("header").GetPduReadOps(), dst.header);
@@ -53,10 +64,23 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
 			dst.ranges = src.GetDataFloat32Array("ranges");
 			dst.intensities = src.GetDataFloat32Array("intensities");
         }
+        static private void ConvertToMessage(IPduReadOperation src, MQuaternion dst)
+        {
+			dst.x = src.GetDataFloat64("x");
+			dst.y = src.GetDataFloat64("y");
+			dst.z = src.GetDataFloat64("z");
+			dst.w = src.GetDataFloat64("w");
+        }
         static private void ConvertToMessage(IPduReadOperation src, MTime dst)
         {
 			dst.secs = src.GetDataUInt32("secs");
 			dst.nsecs = src.GetDataUInt32("nsecs");
+        }
+        static private void ConvertToMessage(IPduReadOperation src, MVector3 dst)
+        {
+			dst.x = src.GetDataFloat64("x");
+			dst.y = src.GetDataFloat64("y");
+			dst.z = src.GetDataFloat64("z");
         }
         
         
@@ -66,6 +90,12 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
             if (type.Equals("LaserScan"))
             {
             	MLaserScan ros_topic = new MLaserScan();
+                ConvertToMessage(src, ros_topic);
+                return ros_topic;
+            }
+            if (type.Equals("Imu"))
+            {
+            	MImu ros_topic = new MImu();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }
