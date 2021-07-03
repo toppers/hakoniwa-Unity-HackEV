@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Unity.Robotics.ROSTCPConnector;
 using UnityEngine;
 using System;
-using RosMessageTypes.RoboticsDemo;
+using RosMessageTypes.Hackev;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 
 namespace Hakoniwa.PluggableAsset.Communication.Method.ROS
@@ -26,15 +26,15 @@ namespace Hakoniwa.PluggableAsset.Communication.Method.ROS
             }
 
 
-            ros.Subscribe<MSensor>("sensor", MSensorChange);
+            ros.Subscribe<MLaserScan>("scan", MLaserScanChange);
             ros.Subscribe<MActuator>("actuator", MActuatorChange);
 
         }
 
 
-        private void MSensorChange(MSensor obj)
+        private void MLaserScanChange(MLaserScan obj)
         {
-            this.topic_data_table["sensor"] = obj;
+            this.topic_data_table["scan"] = obj;
         }
         private void MActuatorChange(MActuator obj)
         {

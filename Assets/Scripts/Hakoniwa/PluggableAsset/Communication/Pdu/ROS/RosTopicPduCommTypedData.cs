@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
-using RosMessageTypes.RoboticsDemo;
 
 namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
 {
