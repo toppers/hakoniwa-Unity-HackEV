@@ -53,7 +53,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
             this.sensor.transform.localRotation = this.init_angle;
             for (int i = 0; i < max_count; i++)
             {
-                distances[i] = GetSensorValue(i) / 10.0f;
+                distances[i] = GetSensorValue(i) / 100.0f;
                 this.sensor.transform.Rotate(0, 1, 0);
             }
         }
