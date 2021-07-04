@@ -29,7 +29,7 @@ namespace Hakoniwa.PluggableAsset.Communication.Method.ROS
 
             ros.Subscribe<MLaserScan>("scan", MLaserScanChange);
             ros.Subscribe<MImu>("imu", MImuChange);
-            ros.Subscribe<MActuator>("actuator", MActuatorChange);
+            ros.Subscribe<MTwist>("cmd_vel", MTwistChange);
 
         }
 
@@ -42,9 +42,9 @@ namespace Hakoniwa.PluggableAsset.Communication.Method.ROS
         {
             this.topic_data_table["imu"] = obj;
         }
-        private void MActuatorChange(MActuator obj)
+        private void MTwistChange(MTwist obj)
         {
-            this.topic_data_table["actuator"] = obj;
+            this.topic_data_table["cmd_vel"] = obj;
         }
 
         public void Publish(IPduCommTypedData data)

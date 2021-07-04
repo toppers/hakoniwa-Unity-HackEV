@@ -21,20 +21,6 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
         }
         
 
-        static private void ConvertToMessage(IPduReadOperation src, MActuator dst)
-        {
-			dst.led = src.GetDataInt32("led");
-			dst.motor_power_a = src.GetDataInt32("motor_power_a");
-			dst.motor_power_b = src.GetDataInt32("motor_power_b");
-			dst.motor_power_c = src.GetDataInt32("motor_power_c");
-			dst.motor_stop_a = src.GetDataUInt32("motor_stop_a");
-			dst.motor_stop_b = src.GetDataUInt32("motor_stop_b");
-			dst.motor_stop_c = src.GetDataUInt32("motor_stop_c");
-			dst.motor_reset_angle_a = src.GetDataInt32("motor_reset_angle_a");
-			dst.motor_reset_angle_b = src.GetDataInt32("motor_reset_angle_b");
-			dst.motor_reset_angle_c = src.GetDataInt32("motor_reset_angle_c");
-			dst.gyro_reset = src.GetDataInt32("gyro_reset");
-        }
         static private void ConvertToMessage(IPduReadOperation src, MHeader dst)
         {
 			dst.seq = src.GetDataUInt32("seq");
@@ -76,6 +62,11 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
 			dst.secs = src.GetDataUInt32("secs");
 			dst.nsecs = src.GetDataUInt32("nsecs");
         }
+        static private void ConvertToMessage(IPduReadOperation src, MTwist dst)
+        {
+            ConvertToMessage(src.Ref("linear").GetPduReadOps(), dst.linear);
+            ConvertToMessage(src.Ref("angular").GetPduReadOps(), dst.angular);
+        }
         static private void ConvertToMessage(IPduReadOperation src, MVector3 dst)
         {
 			dst.x = src.GetDataFloat64("x");
@@ -99,9 +90,9 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }
-            if (type.Equals("Actuator"))
+            if (type.Equals("Twist"))
             {
-            	MActuator ros_topic = new MActuator();
+            	MTwist ros_topic = new MTwist();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }

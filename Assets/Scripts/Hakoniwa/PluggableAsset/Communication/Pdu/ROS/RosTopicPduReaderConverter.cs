@@ -21,39 +21,25 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
         }
         
 
-        private void ConvertToPdu(MActuator src, IPduWriteOperation dst)
-        {
-            dst.SetData("led", src.led);
-            dst.SetData("motor_power_a", src.motor_power_a);
-            dst.SetData("motor_power_b", src.motor_power_b);
-            dst.SetData("motor_power_c", src.motor_power_c);
-            dst.SetData("motor_stop_a", src.motor_stop_a);
-            dst.SetData("motor_stop_b", src.motor_stop_b);
-            dst.SetData("motor_stop_c", src.motor_stop_c);
-            dst.SetData("motor_reset_angle_a", src.motor_reset_angle_a);
-            dst.SetData("motor_reset_angle_b", src.motor_reset_angle_b);
-            dst.SetData("motor_reset_angle_c", src.motor_reset_angle_c);
-            dst.SetData("gyro_reset", src.gyro_reset);
-        }
         private void ConvertToPdu(MHeader src, IPduWriteOperation dst)
         {
             dst.SetData("seq", src.seq);
-			ConvertToPdu(src, dst.Ref("stamp").GetPduWriteOps());
+			ConvertToPdu(src.stamp, dst.Ref("stamp").GetPduWriteOps());
             dst.SetData("frame_id", src.frame_id);
         }
         private void ConvertToPdu(MImu src, IPduWriteOperation dst)
         {
-			ConvertToPdu(src, dst.Ref("header").GetPduWriteOps());
-			ConvertToPdu(src, dst.Ref("orientation").GetPduWriteOps());
+			ConvertToPdu(src.header, dst.Ref("header").GetPduWriteOps());
+			ConvertToPdu(src.orientation, dst.Ref("orientation").GetPduWriteOps());
             dst.SetData("orientation_covariance", src.orientation_covariance);
-			ConvertToPdu(src, dst.Ref("angular_velocity").GetPduWriteOps());
+			ConvertToPdu(src.angular_velocity, dst.Ref("angular_velocity").GetPduWriteOps());
             dst.SetData("angular_velocity_covariance", src.angular_velocity_covariance);
-			ConvertToPdu(src, dst.Ref("linear_acceleration").GetPduWriteOps());
+			ConvertToPdu(src.linear_acceleration, dst.Ref("linear_acceleration").GetPduWriteOps());
             dst.SetData("linear_acceleration_covariance", src.linear_acceleration_covariance);
         }
         private void ConvertToPdu(MLaserScan src, IPduWriteOperation dst)
         {
-			ConvertToPdu(src, dst.Ref("header").GetPduWriteOps());
+			ConvertToPdu(src.header, dst.Ref("header").GetPduWriteOps());
             dst.SetData("angle_min", src.angle_min);
             dst.SetData("angle_max", src.angle_max);
             dst.SetData("angle_increment", src.angle_increment);
@@ -75,6 +61,11 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
         {
             dst.SetData("secs", src.secs);
             dst.SetData("nsecs", src.nsecs);
+        }
+        private void ConvertToPdu(MTwist src, IPduWriteOperation dst)
+        {
+			ConvertToPdu(src.linear, dst.Ref("linear").GetPduWriteOps());
+			ConvertToPdu(src.angular, dst.Ref("angular").GetPduWriteOps());
         }
         private void ConvertToPdu(MVector3 src, IPduWriteOperation dst)
         {
@@ -101,9 +92,9 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS
                 ConvertToPdu(ros_topic_data, dst.GetWriteOps());
                 return;
             }
-            if (ros_pdu_reader.GetTypeName().Equals("Actuator"))
+            if (ros_pdu_reader.GetTypeName().Equals("Twist"))
             {
-                var ros_topic_data = ros_topic.GetTopicData() as MActuator;
+                var ros_topic_data = ros_topic.GetTopicData() as MTwist;
                 ConvertToPdu(ros_topic_data, dst.GetWriteOps());
                 return;
             }

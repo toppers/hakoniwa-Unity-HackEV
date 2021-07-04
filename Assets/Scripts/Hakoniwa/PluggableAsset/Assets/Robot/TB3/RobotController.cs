@@ -20,8 +20,10 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         private PduIoConnector pdu_io;
         private IPduWriter pdu_laser_scan;
         private IPduWriter pdu_imu;
+        private IPduReader pdu_motor_control;
         private ILaserScan laser_scan;
         private IIMUSensor imu;
+        private MotorController motor_controller;
 
         public void CopySensingDataToPdu()
         {
@@ -36,7 +38,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
 
         public void DoActuation()
         {
-            //TODO
+            this.motor_controller.DoActuation();
         }
 
         public string GetName()
@@ -51,19 +53,9 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
             this.myObject = GameObject.Find("Robot/" + this.transform.name);
             this.parts = myObject.GetComponentInChildren<ITB3Parts>();
             this.my_name = string.Copy(this.transform.name);
+            this.pdu_io = PduIoConnector.Get(this.GetName());
             this.InitActuator();
             this.InitSensor();
-            this.pdu_io = PduIoConnector.Get(this.GetName());
-            this.pdu_laser_scan = this.pdu_io.GetWriter(this.GetName() + "_Tb3LaserSensorPdu");
-            if (this.pdu_laser_scan == null)
-            {
-                throw new ArgumentException("can not found LaserScan pdu:" + this.GetName() + "_Tb3LaserSensorPdu");
-            }
-            this.pdu_imu = this.pdu_io.GetWriter(this.GetName() + "_Tb3ImuSensorPdu");
-            if (this.pdu_imu == null)
-            {
-                throw new ArgumentException("can not found Imu pdu:" + this.GetName() + "_Tb3IMUSensorPdu");
-            }
         }
 
         private void InitSensor()
@@ -85,11 +77,27 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
                 imu = obj.GetComponentInChildren<IIMUSensor>();
                 imu.Initialize(obj);
             }
+            this.pdu_laser_scan = this.pdu_io.GetWriter(this.GetName() + "_Tb3LaserSensorPdu");
+            if (this.pdu_laser_scan == null)
+            {
+                throw new ArgumentException("can not found LaserScan pdu:" + this.GetName() + "_Tb3LaserSensorPdu");
+            }
+            this.pdu_imu = this.pdu_io.GetWriter(this.GetName() + "_Tb3ImuSensorPdu");
+            if (this.pdu_imu == null)
+            {
+                throw new ArgumentException("can not found Imu pdu:" + this.GetName() + "_Tb3ImuSensorPdu");
+            }
         }
 
         private void InitActuator()
         {
-            //TODO
+            motor_controller = new MotorController();
+            this.pdu_motor_control = this.pdu_io.GetReader(this.GetName() + "_Tb3CmdVelPdu");
+            if (this.pdu_motor_control == null)
+            {
+                throw new ArgumentException("can not found CmdVel pdu:" + this.GetName() + "_Tb3CmdVelPdu");
+            }
+            motor_controller.Initialize(this.root, this.transform, this.parts, this.pdu_motor_control);
         }
     }
 }
