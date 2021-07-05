@@ -43,8 +43,8 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
             target_velocity = this.pdu_reader.GetReadOps().Ref("linear").GetDataFloat64("x");
             target_rotation_angle_rate = this.pdu_reader.GetReadOps().Ref("angular").GetDataFloat64("z");
 
-            Debug.Log("target_velocity=" + target_velocity);
-            Debug.Log("target_rotation_angle_rate=" + target_rotation_angle_rate);
+            //Debug.Log("target_velocity=" + target_velocity);
+            //Debug.Log("target_rotation_angle_rate=" + target_rotation_angle_rate);
             // V_R(右車輪の目標速度) = V(目標速度) + d × ω(目標角速度)
             // V_L(左車輪の目標速度) = V(目標速度) - d × ω(目標角速度)
             motors[0].SetTargetVelicty((float)(target_velocity + motor_interval_distance * target_rotation_angle_rate));

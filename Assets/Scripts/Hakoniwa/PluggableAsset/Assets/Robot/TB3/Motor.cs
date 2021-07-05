@@ -98,7 +98,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         public void SetTargetVelicty(float targetVelocity)
         {
             float tmp = power_const * targetVelocity;
-            Debug.Log("MOTOR:targetVelocity=" + tmp);
+            //Debug.Log("MOTOR:targetVelocity=" + tmp);
             this.targetVelocity = tmp;
             this.motor.targetVelocity = tmp;
             this.joint.motor = this.motor;
