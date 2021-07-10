@@ -35,7 +35,6 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
         private IRobotLed led;
         private IEV3Parts parts;
         private PduIoConnector pdu_io;
-        private GameObject sample_obj;
 
         private IPduReader pdu_reader;
         private IPduWriter pdu_writer;
@@ -52,7 +51,6 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
             this.pdu_io = PduIoConnector.Get(this.GetName());
             this.pdu_reader = this.pdu_io.GetReader(this.GetName() + "_Ev3ActuatorPdu");
             this.pdu_writer = this.pdu_io.GetWriter(this.GetName() + "_Ev3SensorPdu");
-            this.sample_obj = GameObject.Find("RoboModel_Axis");
         }
         public string GetName()
         {
@@ -65,10 +63,10 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
             int power_b = 0;
             int power_c = 0;
             int led_color = 0;
-            led_color = this.pdu_reader.GetReadOps().GetDataInt32("led");
-            power_a = this.pdu_reader.GetReadOps().GetDataInt32("motor_power_a");
-            power_b = this.pdu_reader.GetReadOps().GetDataInt32("motor_power_b");
-            power_c = this.pdu_reader.GetReadOps().GetDataInt32("motor_power_c");
+            led_color = this.pdu_reader.GetReadOps().GetDataUInt8Array("leds")[0];
+            power_a = this.pdu_reader.GetReadOps().Refs("motors")[0].GetDataInt32("power");
+            power_b = this.pdu_reader.GetReadOps().Refs("motors")[1].GetDataInt32("power");
+            power_c = this.pdu_reader.GetReadOps().Refs("motors")[2].GetDataInt32("power");
 
 
             if (this.led != null)
@@ -88,25 +86,25 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
                 this.motor_c.SetTargetVelicty(power_c * this.armMotorConst);
             }
 
-            int reset = this.pdu_reader.GetReadOps().GetDataInt32("motor_reset_angle_a");
+            uint reset = this.pdu_reader.GetReadOps().Refs("motors")[0].GetDataUInt32("reset_angle");
             if ((this.motor_a_sensor != null) && (reset != 0))
             {
                 this.motor_a_sensor.ClearDegree();
                 Debug.Log("reset tire1");
             }
-            reset = this.pdu_reader.GetReadOps().GetDataInt32("motor_reset_angle_b");
+            reset = this.pdu_reader.GetReadOps().Refs("motors")[1].GetDataUInt32("reset_angle");
             if ((this.motor_b_sensor != null) && (reset != 0))
             {
                 this.motor_b_sensor.ClearDegree();
                 Debug.Log("reset tire2");
             }
-            reset = this.pdu_reader.GetReadOps().GetDataInt32("motor_reset_angle_c");
+            reset = this.pdu_reader.GetReadOps().Refs("motors")[2].GetDataUInt32("reset_angle");
             if ((this.motor_arm_sensor != null) && (reset != 0))
             {
                 this.motor_arm_sensor.ClearDegree();
                 Debug.Log("reset arm");
             }
-            reset = this.pdu_reader.GetReadOps().GetDataInt32("gyro_reset");
+            reset = this.pdu_reader.GetReadOps().GetDataUInt32("gyro_reset");
             if ((this.gyroSensor != null) && (reset != 0))
             {
                 this.gyroSensor.ClearDegree();
@@ -116,48 +114,54 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
 
         public void CopySensingDataToPdu()
         {
+            uint[] motor_angles = new uint[3];
+            for (int i = 0; i < 3; i++)
+            {
+                motor_angles[i] = 0;
+            }
             if (this.motor_a_sensor != null)
             {
                 motor_a_sensor.UpdateSensorValues();
-                this.pdu_writer.GetWriteOps().SetData("motor_angle_a", (int)motor_a_sensor.GetDegree());
+                motor_angles[0] = (uint)motor_a_sensor.GetDegree();
             }
             if (this.motor_b_sensor != null)
             {
                 motor_b_sensor.UpdateSensorValues();
-                this.pdu_writer.GetWriteOps().SetData("motor_angle_b", (int)motor_b_sensor.GetDegree());
+                motor_angles[1] = (uint)motor_b_sensor.GetDegree();
             }
             if (this.motor_arm_sensor != null)
             {
                 motor_arm_sensor.UpdateSensorValues();
-                this.pdu_writer.GetWriteOps().SetData("motor_angle_c", (int)motor_arm_sensor.GetDegree());
+                motor_angles[2] = (uint)motor_arm_sensor.GetDegree();
             }
+            this.pdu_writer.GetWriteOps().SetData("motor_angle", motor_angles);
             if (this.colorSensor0 != null)
             {
                 colorSensor0.UpdateSensorValues();
-                this.pdu_writer.GetWriteOps().SetData("sensor_reflect0", (int)(this.colorSensor0.GetLightValue() * 100f));
+                this.pdu_writer.GetWriteOps().Refs("color_sensors")[0].SetData("reflect", (uint)(this.colorSensor0.GetLightValue() * 100f));
                 ColorRGB color_sensor_rgb;
                 this.colorSensor0.GetRgb(out color_sensor_rgb);
-                this.pdu_writer.GetWriteOps().SetData("sensor_rgb_r0", color_sensor_rgb.r);
-                this.pdu_writer.GetWriteOps().SetData("sensor_rgb_g0", color_sensor_rgb.g);
-                this.pdu_writer.GetWriteOps().SetData("sensor_rgb_b0", color_sensor_rgb.b);
-                this.pdu_writer.GetWriteOps().SetData("sensor_color0", (int)this.colorSensor0.GetColorId());
+                this.pdu_writer.GetWriteOps().Refs("color_sensors")[0].SetData("rgb_r", (uint)color_sensor_rgb.r);
+                this.pdu_writer.GetWriteOps().Refs("color_sensors")[0].SetData("rgb_g", (uint)color_sensor_rgb.g);
+                this.pdu_writer.GetWriteOps().Refs("color_sensors")[0].SetData("rgb_b", (uint)color_sensor_rgb.b);
+                this.pdu_writer.GetWriteOps().Refs("color_sensors")[0].SetData("color", (uint)this.colorSensor0.GetColorId());
             }
             if (this.colorSensor1 != null)
             {
                 colorSensor1.UpdateSensorValues();
-                this.pdu_writer.GetWriteOps().SetData("sensor_reflect1", (int)(this.colorSensor1.GetLightValue() * 100f));
+                this.pdu_writer.GetWriteOps().Refs("color_sensors")[1].SetData("reflect", (uint)(this.colorSensor1.GetLightValue() * 100f));
                 ColorRGB color_sensor_rgb;
                 this.colorSensor1.GetRgb(out color_sensor_rgb);
-                this.pdu_writer.GetWriteOps().SetData("sensor_rgb_r1", color_sensor_rgb.r);
-                this.pdu_writer.GetWriteOps().SetData("sensor_rgb_g1", color_sensor_rgb.g);
-                this.pdu_writer.GetWriteOps().SetData("sensor_rgb_b1", color_sensor_rgb.b);
-                this.pdu_writer.GetWriteOps().SetData("sensor_color1", (int)this.colorSensor1.GetColorId());
+                this.pdu_writer.GetWriteOps().Refs("color_sensors")[1].SetData("rgb_r", (uint)color_sensor_rgb.r);
+                this.pdu_writer.GetWriteOps().Refs("color_sensors")[1].SetData("rgb_g", (uint)color_sensor_rgb.g);
+                this.pdu_writer.GetWriteOps().Refs("color_sensors")[1].SetData("rgb_b", (uint)color_sensor_rgb.b);
+                this.pdu_writer.GetWriteOps().Refs("color_sensors")[1].SetData("color", (uint)this.colorSensor1.GetColorId());
             }
             if (this.ultrasonicSensor != null)
             {
                 ultrasonicSensor.UpdateSensorValues();
                 //Debug.Log("ultrasonic=" + this.ultrasonicSensor.GetDistanceValue());
-                this.pdu_writer.GetWriteOps().SetData("sensor_ultrasonic", (int)(this.ultrasonicSensor.GetDistanceValue() * 10));
+                this.pdu_writer.GetWriteOps().SetData("sensor_ultrasonic", (uint)(this.ultrasonicSensor.GetDistanceValue() * 10));
                 //Debug.Log("PDU:ultrasonic=" + this.pdu_writer.GetReadOps().GetDataInt32("sensor_ultrasonic"));
             }
             if (touchSensor0 != null)
@@ -166,11 +170,11 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
                 if (this.touchSensor0.IsPressed())
                 {
                     //Debug.Log("Touched0:");
-                    this.pdu_writer.GetWriteOps().SetData("touch_sensor0", 4095);
+                    this.pdu_writer.GetWriteOps().Refs("touch_sensors")[0].SetData("value", (uint)4095);
                 }
                 else
                 {
-                    this.pdu_writer.GetWriteOps().SetData("touch_sensor0", 0);
+                    this.pdu_writer.GetWriteOps().Refs("touch_sensors")[0].SetData("value", (uint)0);
                 }
             }
             if (touchSensor1 != null)
@@ -179,11 +183,11 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
                 if (this.touchSensor1.IsPressed())
                 {
                     //Debug.Log("Touched1:");
-                    this.pdu_writer.GetWriteOps().SetData("touch_sensor1", 4095);
+                    this.pdu_writer.GetWriteOps().Refs("touch_sensors")[1].SetData("value", (uint)4095);
                 }
                 else
                 {
-                    this.pdu_writer.GetWriteOps().SetData("touch_sensor1", 0);
+                    this.pdu_writer.GetWriteOps().Refs("touch_sensors")[1].SetData("value", (uint)0);
                 }
             }
             if (gyroSensor != null)
@@ -198,7 +202,6 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
                 this.pdu_writer.GetWriteOps().SetData("gps_lon", gpsSensor.GetLongitude());
                 this.pdu_writer.GetWriteOps().SetData("gps_lat", gpsSensor.GeLatitude());
             }
-
         }
 
         private void InitActuator()

@@ -13,12 +13,12 @@ namespace Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot.TB3
         private GameObject sensor;
         private float deltaTime;
         private Vector3 prev_velocity = Vector3.zero;
-        private Rigidbody rigidbody;
+        private Rigidbody my_rigidbody;
 
         public void Initialize(object root)
         {
             this.sensor = (GameObject)root;
-            this.rigidbody = this.sensor.GetComponentInChildren<Rigidbody>();
+            this.my_rigidbody = this.sensor.GetComponentInChildren<Rigidbody>();
             this.deltaTime = Time.fixedDeltaTime;
         }
 
@@ -31,13 +31,13 @@ namespace Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot.TB3
         }
         private void UpdateAngularVelocity(Pdu pdu)
         {
-            pdu.Ref("angular_velocity").SetData("x", (double)rigidbody.angularVelocity.z);
-            pdu.Ref("angular_velocity").SetData("y", (double)-rigidbody.angularVelocity.x);
-            pdu.Ref("angular_velocity").SetData("z", (double)rigidbody.angularVelocity.y);
+            pdu.Ref("angular_velocity").SetData("x", (double)my_rigidbody.angularVelocity.z);
+            pdu.Ref("angular_velocity").SetData("y", (double)-my_rigidbody.angularVelocity.x);
+            pdu.Ref("angular_velocity").SetData("z", (double)my_rigidbody.angularVelocity.y);
         }
         private void UpdateLinearAcceleration(Pdu pdu)
         {
-            Vector3 current_velocity = this.sensor.transform.InverseTransformDirection(rigidbody.velocity);
+            Vector3 current_velocity = this.sensor.transform.InverseTransformDirection(my_rigidbody.velocity);
             Vector3 acceleration = (current_velocity - prev_velocity) / deltaTime;
             prev_velocity = current_velocity;
             //gravity element
