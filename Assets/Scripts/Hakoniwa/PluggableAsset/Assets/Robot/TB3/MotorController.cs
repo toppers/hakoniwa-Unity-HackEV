@@ -8,7 +8,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
     public class MotorController
     {
         private Motor[] motors = new Motor[2]; // 0: R, 1: L
-        private int motor_power = 200;
+        private int motor_power = 150;
         private float motor_interval_distance = 0.16f; // 16cm
         private IPduReader pdu_reader;
 

@@ -32,6 +32,8 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
             if (Physics.Raycast(transform.position, fwd, out hit, contact_distance))
             {
                 this.distanceValue = hit.distance;
+                Debug.DrawRay(this.frontSensor.transform.position, fwd * hit.distance, Color.green, 0.05f, false);
+
             }
             else
             {
