@@ -9,8 +9,8 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
 {
     public class LaserScanner : MonoBehaviour, ILaserScan
     {
-        private static bool is_debug = true;
-        private static int view_interval = 36;
+        public static bool is_debug = false;
+        public static int view_interval = 36;
         private const int max_count = 360;
         private float contact_distance = 350f; /* cm */
         private float[] distances = new float[max_count];
@@ -70,8 +70,8 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
                 {
                     Debug.DrawRay(this.sensor.transform.position, fwd * hit.distance, Color.red, 0.05f, false);
                 }
-                return hit.distance;
                 //Debug.Log(hit.collider.gameObject.name);
+                return hit.distance;
             }
             else
             {
