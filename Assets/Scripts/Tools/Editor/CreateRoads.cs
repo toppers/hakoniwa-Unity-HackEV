@@ -138,7 +138,33 @@ public class CreateRoads : EditorWindow
         }
         return index;
     }
-
+    private int GetReverseLocateIndex(RoadEntryInstance e)
+    {
+        int index = 0;
+        if (e.cfg_entry.connect_direction.Contains("z"))
+        {
+            if (e.cfg_entry.connect_direction.Contains("-"))
+            {
+                index = 0;
+            }
+            else
+            {
+                index = 2;
+            }
+        }
+        else
+        {
+            if (e.cfg_entry.connect_direction.Contains("-"))
+            {
+                index = 1;
+            }
+            else
+            {
+                index = 3;
+            }
+        }
+        return index;
+    }
     private void CalculatePos(RoadEntryInstance prev_e, RoadEntryInstance e)
     {
         //prev prefab name     instance_angle    x, z, can_locate
@@ -147,6 +173,7 @@ public class CreateRoads : EditorWindow
         float pos_x = prev_e.pos.x;
         float scale = 1.0f;
         int locate_index = GetLocateIndex(e);
+        int r_locate_index = GetReverseLocateIndex(e);
         int rinx = GetRelativeAngleIndex(prev_e, locate_index);
 
         Debug.Log("LOCATION-INDEX: " + locate_index);
@@ -171,10 +198,11 @@ public class CreateRoads : EditorWindow
         {
             scale = e.cfg_entry.scale;
         }
-        float c_size_z = GetShiftSizeZ(e, locate_index) * scale;
-        float c_size_x = GetShiftSizeX(e, locate_index) * scale;
+        int crinx = GetRelativeAngleIndex(e, r_locate_index);
+        float c_size_z = -1.0f * GetShiftSizeZ(e, r_locate_index) * scale;
+        float c_size_x = -1.0f * GetShiftSizeX(e, r_locate_index) * scale;
         Debug.Log("CURR: " + e.prefab_fname + "angle: " + GetInstanceAngleIndex(e) 
-            + " Z=" + c_size_z + " X=" + c_size_x);
+            + " Z=" + c_size_z + " X=" + c_size_x + " RINX=" + crinx);
         pos_z += (prev_size_z + c_size_z);
         pos_x += (prev_size_x + c_size_x);
 

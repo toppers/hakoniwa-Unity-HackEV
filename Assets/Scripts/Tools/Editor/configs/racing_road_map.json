@@ -113,11 +113,7 @@
 		{
 			"prefab_name": "straight",
 			"rotation": 90.0,
-			"connect_direction": "+x",
-		},
-		{
-			"prefab_name": "cross_road",
-			"rotation": 90.0,
+			"scale": 1.285,
 			"connect_direction": "+x",
 		},
 	]
