@@ -1,0 +1,124 @@
+{
+	"entries": [
+		{
+			"prefab_name": "corner",
+			"rotation": 0.0,
+			"connect_direction": null,
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 0.0,
+			"connect_direction": "+z",
+		},
+		{
+			"prefab_name": "corner",
+			"rotation": 180.0,
+			"connect_direction": "+z",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "+x",
+		},
+		{
+			"prefab_name": "corner",
+			"rotation": 270.0,
+			"connect_direction": "+x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 0.0,
+			"connect_direction": "-z",
+		},
+		{
+			"prefab_name": "corner",
+			"rotation": -270.0,
+			"connect_direction": "-z",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "+x",
+		},
+		{
+			"prefab_name": "corner",
+			"rotation": 0.0,
+			"connect_direction": "+x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 0.0,
+			"connect_direction": "+z",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 0.0,
+			"connect_direction": "+z",
+		},
+		{
+			"prefab_name": "corner",
+			"rotation": 270.0,
+			"connect_direction": "+z",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "-x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "-x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "-x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "-x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "-x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "-x",
+		},
+		{
+			"prefab_name": "corner",
+			"rotation": 180.0,
+			"connect_direction": "-x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 0.0,
+			"connect_direction": "-z",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 0.0,
+			"connect_direction": "-z",
+		},
+		{
+			"prefab_name": "corner",
+			"rotation": 90.0,
+			"connect_direction": "-z",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "+x",
+		},
+		{
+			"prefab_name": "cross_road",
+			"rotation": 90.0,
+			"connect_direction": "+x",
+		},
+	]
+}

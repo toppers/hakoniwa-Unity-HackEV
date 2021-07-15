@@ -1,0 +1,149 @@
+{
+	"entries": [
+		{
+			"prefab_name": "junction1",
+			"rotation": -90.0,
+			"connect_direction": null,
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 0.0,
+			"connect_direction": "-z",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "-x/junction1",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "x/junction1",
+		},
+		{
+			"prefab_name": "d_junction",
+			"rotation": 90.0,
+			"connect_direction": "x",
+		},
+		{
+			"prefab_name": "d_straight",
+			"rotation": 90.0,
+			"connect_direction": "x",
+		},
+		{
+			"prefab_name": "junction2",
+			"rotation": 0.0,
+			"connect_direction": "x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 0.0,
+			"connect_direction": "z/junction2",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 0.0,
+			"connect_direction": "-z/junction2",
+		},
+		{
+			"prefab_name": "corner",
+			"rotation": 0.0,
+			"connect_direction": "-z",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "-x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "-x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "-x",
+		},
+		{
+			"prefab_name": "junction1",
+			"rotation": 90.0,
+			"connect_direction": "-x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "-x",
+		},
+		{
+			"prefab_name": "corner",
+			"rotation": 90.0,
+			"connect_direction": "-x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 0.0,
+			"connect_direction": "z",
+		},
+		{
+			"prefab_name": "junction1",
+			"rotation": 180.0,
+			"connect_direction": "z",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 0.0,
+			"connect_direction": "z",
+		},
+		{
+			"prefab_name": "d_junction",
+			"rotation": 0.0,
+			"connect_direction": "z",
+		},
+		{
+			"prefab_name": "d_corner",
+			"rotation": 180.0,
+			"connect_direction": "z",
+		},
+		{
+			"prefab_name": "d_straight",
+			"rotation": 90.0,
+			"connect_direction": "x",
+		},
+		{
+			"prefab_name": "d_straight",
+			"rotation": 90.0,
+			"connect_direction": "x",
+		},
+		{
+			"prefab_name": "d_straight",
+			"rotation": 90.0,
+			"connect_direction": "x",
+		},
+		{
+			"prefab_name": "d_junction",
+			"rotation": -90.0,
+			"connect_direction": "x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "x",
+		},
+		{
+			"prefab_name": "corner",
+			"rotation": -90.0,
+			"connect_direction": "x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 0.0,
+			"connect_direction": "-z",
+		},
+		{
+			"prefab_name": "cross_road",
+			"rotation": 0.0,
+			"connect_direction": "-z",
+		},
+	]
+}

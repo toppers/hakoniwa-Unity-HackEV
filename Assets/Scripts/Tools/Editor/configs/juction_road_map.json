@@ -1,0 +1,28 @@
+{
+	"entries": [
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+		},
+		{
+			"prefab_name": "junction",
+			"rotation": 90.0,
+			"connect_direction": "+x",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 0.0,
+			"connect_direction": "+z",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 0.0,
+			"connect_direction": "-z/junction",
+		},
+		{
+			"prefab_name": "straight",
+			"rotation": 90.0,
+			"connect_direction": "+x/junction",
+		},
+	]
+}
