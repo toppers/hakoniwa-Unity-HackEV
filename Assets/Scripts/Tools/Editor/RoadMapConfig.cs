@@ -10,7 +10,9 @@ namespace Hakoniwa.Tools.RoadMap
     [System.Serializable]
     public class RoadMapEntry
     {
+        public string name;
         public string prefab_name;
+        public int repeat_num;
         public float rotation;
         public float scale;
         public string connect_direction;
@@ -46,6 +48,7 @@ namespace Hakoniwa.Tools.RoadMap
     public class RoadEntryInstance
     {
         internal static RoadParts parts;
+        internal static List<RoadEntryInstance> instances = new List<RoadEntryInstance>();
 
         public static RoadPartsEntry Get(string name)
         {
@@ -54,6 +57,24 @@ namespace Hakoniwa.Tools.RoadMap
                 if (e.name.Equals(name))
                 {
                     return e;
+                }
+            }
+            return null;
+        }
+        public static void AddInstance(RoadEntryInstance instance)
+        {
+            instances.Add(instance);
+        }
+        public static RoadEntryInstance GetInstance(string name)
+        {
+            foreach(var e in instances)
+            {
+                if (e.instance != null && e.instance.name != null)
+                {
+                    if (e.instance.name.Equals(name))
+                    {
+                        return e;
+                    }
                 }
             }
             return null;

@@ -11,6 +11,7 @@ public class CreateRoads : EditorWindow
     private int index = 0;
     private GameObject parent;
     private RoadMap map;
+    private Dictionary<string, RoadEntryInstance> hash = new Dictionary<string, RoadEntryInstance>();
 
     [MenuItem("Window/Create Other/Create Roads")]
     static void Init()
@@ -210,12 +211,37 @@ public class CreateRoads : EditorWindow
         e.pos.x = pos_x;
         return;
     }
+    private void CreateEntry(ref RoadEntryInstance e, ref RoadEntryInstance prev_e, RoadMapEntry entry)
+    {
+        var e_type = RoadEntryInstance.Get(entry.prefab_name);
+        e = new RoadEntryInstance(entry);
+        e.parts_type = e_type;
+        e.cfg_entry = entry;
+        if (prev_e != null)
+        {
+            CalculatePos(prev_e, e);
+        }
+        this.LoadPrefab(e);
+        prev_e = e;
+        hash[entry.prefab_name] = e;
+        RoadEntryInstance.AddInstance(e);
+    }
+    private int GetRepeatNum(RoadMapEntry entry)
+    {
+        if (entry.repeat_num > 0)
+        {
+            return entry.repeat_num;
+        }
+        else
+        {
+            return 1;
+        }
+    }
     private void Create()
     {
         this.index = 0;
         RoadEntryInstance e = null;
         RoadEntryInstance prev_e = null;
-        Dictionary<string, RoadEntryInstance> hash = new Dictionary<string, RoadEntryInstance>();
 
         string jsonString = File.ReadAllText("./road_map.json");
         this.map = JsonConvert.DeserializeObject<RoadMap>(jsonString);
@@ -225,30 +251,45 @@ public class CreateRoads : EditorWindow
 
         foreach (var entry in this.map.entries)
         {
-            var e_type = RoadEntryInstance.Get(entry.prefab_name);
-            e = new RoadEntryInstance(entry);
-            e.parts_type = e_type;
-            e.cfg_entry = entry;
             if (prev_e != null)
             {
                 if (entry.connect_direction.Contains("/"))
                 {
                     string[] values = entry.connect_direction.Split('/');
-                    prev_e = hash[values[1]];
+                    prev_e = null;
+                    if (hash.ContainsKey(values[1]))
+                    {
+                        prev_e = hash[values[1]];
+                    }
+                    else
+                    {
+                        prev_e = RoadEntryInstance.GetInstance(values[1]);
+                    }
+                    if (prev_e == null)
+                    {
+                        throw new InvalidDataException("Can not found entry name:" + values[1]);
+                    }
                 }
-
-                CalculatePos(prev_e, e);
             }
-            this.LoadPrefab(e);
-            prev_e = e;
-            hash[entry.prefab_name] = e;
+            for (int i = 0; i < GetRepeatNum(entry); i++)
+            {
+                CreateEntry(ref e, ref prev_e, entry);
+            }
         }
     }
     private void LoadPrefab(RoadEntryInstance road_entry)
     {
         var p = AssetDatabase.LoadAssetAtPath<GameObject>(road_entry.parts_type.prefab_path + "/" + road_entry.prefab_fname);
         road_entry.instance = Instantiate(p, road_entry.pos, Quaternion.identity) as GameObject;
-        road_entry.instance.name = p.name + "_" + index;
+
+        if (road_entry.cfg_entry.name != null)
+        {
+            road_entry.instance.name = road_entry.cfg_entry.name;
+        }
+        else
+        {
+            road_entry.instance.name = p.name + "_" + index;
+        }
         if (parent)
         {
             road_entry.instance.transform.parent = parent.transform;
