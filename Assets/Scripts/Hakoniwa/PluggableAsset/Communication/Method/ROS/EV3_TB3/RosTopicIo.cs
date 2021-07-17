@@ -14,6 +14,7 @@ using Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3;
 using System.IO;
 using Newtonsoft.Json;
 using Hakoniwa.Core.Utils.Logger;
+using RosMessageTypes.BuiltinInterfaces;
 
 namespace Hakoniwa.PluggableAsset.Communication.Method.ROS.EV3_TB3
 {
@@ -68,32 +69,20 @@ namespace Hakoniwa.PluggableAsset.Communication.Method.ROS.EV3_TB3
             }
 
 
-            ros.Subscribe<MEv3PduSensor>("ev3_sensor", MEv3PduSensorChange);
-            ros.Subscribe<MEv3PduActuator>("ev3_actuator", MEv3PduActuatorChange);
-            ros.Subscribe<MLaserScan>("scan", MLaserScanChange);
-            ros.Subscribe<MImu>("imu", MImuChange);
-            ros.Subscribe<MTwist>("cmd_vel", MTwistChange);
+			ros.RegisterPublisher<Ev3PduSensorMsg>("ev3_sensor");
+            ros.Subscribe<Ev3PduActuatorMsg>("ev3_actuator", Ev3PduActuatorMsgChange);
+			ros.RegisterPublisher<LaserScanMsg>("scan");
+			ros.RegisterPublisher<ImuMsg>("imu");
+            ros.Subscribe<TwistMsg>("cmd_vel", TwistMsgChange);
 
         }
 
 
-        private void MEv3PduSensorChange(MEv3PduSensor obj)
-        {
-            this.topic_data_table["ev3_sensor"] = obj;
-        }
-        private void MEv3PduActuatorChange(MEv3PduActuator obj)
+        private void Ev3PduActuatorMsgChange(Ev3PduActuatorMsg obj)
         {
             this.topic_data_table["ev3_actuator"] = obj;
         }
-        private void MLaserScanChange(MLaserScan obj)
-        {
-            this.topic_data_table["scan"] = obj;
-        }
-        private void MImuChange(MImu obj)
-        {
-            this.topic_data_table["imu"] = obj;
-        }
-        private void MTwistChange(MTwist obj)
+        private void TwistMsgChange(TwistMsg obj)
         {
             this.topic_data_table["cmd_vel"] = obj;
         }

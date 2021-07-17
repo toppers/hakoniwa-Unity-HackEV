@@ -14,6 +14,7 @@ using Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3;
 using System.IO;
 using Newtonsoft.Json;
 using Hakoniwa.Core.Utils.Logger;
+using RosMessageTypes.BuiltinInterfaces;
 
 namespace Hakoniwa.PluggableAsset.Communication.Method.ROS.TB3
 {
@@ -68,22 +69,14 @@ namespace Hakoniwa.PluggableAsset.Communication.Method.ROS.TB3
             }
 
 
-            ros.Subscribe<MLaserScan>("scan", MLaserScanChange);
-            ros.Subscribe<MImu>("imu", MImuChange);
-            ros.Subscribe<MTwist>("cmd_vel", MTwistChange);
+			ros.RegisterPublisher<LaserScanMsg>("scan");
+			ros.RegisterPublisher<ImuMsg>("imu");
+            ros.Subscribe<TwistMsg>("cmd_vel", TwistMsgChange);
 
         }
 
 
-        private void MLaserScanChange(MLaserScan obj)
-        {
-            this.topic_data_table["scan"] = obj;
-        }
-        private void MImuChange(MImu obj)
-        {
-            this.topic_data_table["imu"] = obj;
-        }
-        private void MTwistChange(MTwist obj)
+        private void TwistMsgChange(TwistMsg obj)
         {
             this.topic_data_table["cmd_vel"] = obj;
         }

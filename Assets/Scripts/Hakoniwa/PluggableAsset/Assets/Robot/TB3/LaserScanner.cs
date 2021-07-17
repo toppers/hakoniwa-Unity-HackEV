@@ -9,7 +9,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
 {
     public class LaserScanner : MonoBehaviour, ILaserScan
     {
-        public static bool is_debug = false;
+        public static bool is_debug = true;
         public static int view_interval = 36;
         private const int max_count = 360;
         private float contact_distance = 350f; /* cm */
@@ -34,8 +34,8 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
             long t = UtilTime.GetUnixTime();
             uint t_sec = (uint)((long)(t / 1000000));
             uint t_nsec = (uint)((long)(t % 1000000)) * 1000;
-            pdu.Ref("header").Ref("stamp").SetData("secs", t_sec);
-            pdu.Ref("header").Ref("stamp").SetData("nsecs", t_nsec);
+            pdu.Ref("header").Ref("stamp").SetData("sec", t_sec);
+            pdu.Ref("header").Ref("stamp").SetData("nanosec", t_nsec);
             pdu.Ref("header").SetData("frame_id", "laser");
 
             pdu.SetData("angle_min", angle_min);

@@ -11,6 +11,7 @@ using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 using RosMessageTypes.Geometry;
 using RosMessageTypes.Sensor;
 using Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3;
+using RosMessageTypes.BuiltinInterfaces;
 
 namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
 {
@@ -23,13 +24,13 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
         }
         
 
-        static private void ConvertToMessage(IPduReadOperation src, MHeader dst)
+        static private void ConvertToMessage(IPduReadOperation src, HeaderMsg dst)
         {
 			dst.seq = src.GetDataUInt32("seq");
             ConvertToMessage(src.Ref("stamp").GetPduReadOps(), dst.stamp);
 			dst.frame_id = src.GetDataString("frame_id");
         }
-        static private void ConvertToMessage(IPduReadOperation src, MImu dst)
+        static private void ConvertToMessage(IPduReadOperation src, ImuMsg dst)
         {
             ConvertToMessage(src.Ref("header").GetPduReadOps(), dst.header);
             ConvertToMessage(src.Ref("orientation").GetPduReadOps(), dst.orientation);
@@ -39,7 +40,7 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
             ConvertToMessage(src.Ref("linear_acceleration").GetPduReadOps(), dst.linear_acceleration);
 			dst.linear_acceleration_covariance = src.GetDataFloat64Array("linear_acceleration_covariance");
         }
-        static private void ConvertToMessage(IPduReadOperation src, MLaserScan dst)
+        static private void ConvertToMessage(IPduReadOperation src, LaserScanMsg dst)
         {
             ConvertToMessage(src.Ref("header").GetPduReadOps(), dst.header);
 			dst.angle_min = src.GetDataFloat32("angle_min");
@@ -52,24 +53,24 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
 			dst.ranges = src.GetDataFloat32Array("ranges");
 			dst.intensities = src.GetDataFloat32Array("intensities");
         }
-        static private void ConvertToMessage(IPduReadOperation src, MQuaternion dst)
+        static private void ConvertToMessage(IPduReadOperation src, QuaternionMsg dst)
         {
 			dst.x = src.GetDataFloat64("x");
 			dst.y = src.GetDataFloat64("y");
 			dst.z = src.GetDataFloat64("z");
 			dst.w = src.GetDataFloat64("w");
         }
-        static private void ConvertToMessage(IPduReadOperation src, MTime dst)
+        static private void ConvertToMessage(IPduReadOperation src, TimeMsg dst)
         {
-			dst.secs = src.GetDataUInt32("secs");
-			dst.nsecs = src.GetDataUInt32("nsecs");
+			dst.sec = src.GetDataUInt32("sec");
+			dst.nanosec = src.GetDataUInt32("nanosec");
         }
-        static private void ConvertToMessage(IPduReadOperation src, MTwist dst)
+        static private void ConvertToMessage(IPduReadOperation src, TwistMsg dst)
         {
             ConvertToMessage(src.Ref("linear").GetPduReadOps(), dst.linear);
             ConvertToMessage(src.Ref("angular").GetPduReadOps(), dst.angular);
         }
-        static private void ConvertToMessage(IPduReadOperation src, MVector3 dst)
+        static private void ConvertToMessage(IPduReadOperation src, Vector3Msg dst)
         {
 			dst.x = src.GetDataFloat64("x");
 			dst.y = src.GetDataFloat64("y");
@@ -82,19 +83,19 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
 
             if (type.Equals("LaserScan"))
             {
-            	MLaserScan ros_topic = new MLaserScan();
+            	LaserScanMsg ros_topic = new LaserScanMsg();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }
             if (type.Equals("Imu"))
             {
-            	MImu ros_topic = new MImu();
+            	ImuMsg ros_topic = new ImuMsg();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }
             if (type.Equals("Twist"))
             {
-            	MTwist ros_topic = new MTwist();
+            	TwistMsg ros_topic = new TwistMsg();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }

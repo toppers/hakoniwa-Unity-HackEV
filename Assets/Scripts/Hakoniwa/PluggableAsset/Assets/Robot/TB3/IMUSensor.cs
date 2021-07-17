@@ -53,8 +53,8 @@ namespace Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot.TB3
             long t = UtilTime.GetUnixTime();
             uint t_sec = (uint)((long)(t / 1000000));
             uint t_nsec = (uint)((long)(t % 1000000)) * 1000;
-            pdu.Ref("header").Ref("stamp").SetData("secs", t_sec);
-            pdu.Ref("header").Ref("stamp").SetData("nsecs", t_nsec);
+            pdu.Ref("header").Ref("stamp").SetData("sec", t_sec);
+            pdu.Ref("header").Ref("stamp").SetData("nanosec", t_nsec);
             pdu.Ref("header").SetData("frame_id", "imu");
 
             //orientation
