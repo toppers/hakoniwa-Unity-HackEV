@@ -5,13 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.Robotics.ROSTCPConnector.MessageGeneration;
+using Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3;
+
+using RosMessageTypes.BuiltinInterfaces;
+using RosMessageTypes.Geometry;
+using RosMessageTypes.Nav;
+using RosMessageTypes.Sensor;
 using RosMessageTypes.Std;
 using RosMessageTypes.Ev3;
-using Unity.Robotics.ROSTCPConnector.MessageGeneration;
-using RosMessageTypes.Geometry;
-using RosMessageTypes.Sensor;
-using Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3;
-using RosMessageTypes.BuiltinInterfaces;
 
 namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
 {
@@ -26,7 +28,7 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
 
         static private void ConvertToMessage(IPduReadOperation src, Ev3PduActuatorMsg dst)
         {
-            ConvertToMessage(src.Ref("header").GetPduReadOps(), dst.header);
+            ConvertToMessage(src.Ref("head").GetPduReadOps(), dst.head);
 			dst.leds = src.GetDataUInt8Array("leds");
             foreach (var e in src.Refs("motors"))
             {
@@ -62,7 +64,7 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
         }
         static private void ConvertToMessage(IPduReadOperation src, Ev3PduSensorMsg dst)
         {
-            ConvertToMessage(src.Ref("header").GetPduReadOps(), dst.header);
+            ConvertToMessage(src.Ref("head").GetPduReadOps(), dst.head);
 			dst.buttons = src.GetDataUInt8Array("buttons");
             foreach (var e in src.Refs("color_sensors"))
             {
@@ -101,7 +103,6 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
         }
         static private void ConvertToMessage(IPduReadOperation src, HeaderMsg dst)
         {
-			dst.seq = src.GetDataUInt32("seq");
             ConvertToMessage(src.Ref("stamp").GetPduReadOps(), dst.stamp);
 			dst.frame_id = src.GetDataString("frame_id");
         }
@@ -128,6 +129,29 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
 			dst.ranges = src.GetDataFloat32Array("ranges");
 			dst.intensities = src.GetDataFloat32Array("intensities");
         }
+        static private void ConvertToMessage(IPduReadOperation src, OdometryMsg dst)
+        {
+            ConvertToMessage(src.Ref("header").GetPduReadOps(), dst.header);
+			dst.child_frame_id = src.GetDataString("child_frame_id");
+            ConvertToMessage(src.Ref("pose").GetPduReadOps(), dst.pose);
+            ConvertToMessage(src.Ref("twist").GetPduReadOps(), dst.twist);
+        }
+        static private void ConvertToMessage(IPduReadOperation src, PointMsg dst)
+        {
+			dst.x = src.GetDataFloat64("x");
+			dst.y = src.GetDataFloat64("y");
+			dst.z = src.GetDataFloat64("z");
+        }
+        static private void ConvertToMessage(IPduReadOperation src, PoseMsg dst)
+        {
+            ConvertToMessage(src.Ref("position").GetPduReadOps(), dst.position);
+            ConvertToMessage(src.Ref("orientation").GetPduReadOps(), dst.orientation);
+        }
+        static private void ConvertToMessage(IPduReadOperation src, PoseWithCovarianceMsg dst)
+        {
+            ConvertToMessage(src.Ref("pose").GetPduReadOps(), dst.pose);
+			dst.covariance = src.GetDataFloat64Array("covariance");
+        }
         static private void ConvertToMessage(IPduReadOperation src, QuaternionMsg dst)
         {
 			dst.x = src.GetDataFloat64("x");
@@ -137,13 +161,23 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
         }
         static private void ConvertToMessage(IPduReadOperation src, TimeMsg dst)
         {
-			dst.sec = src.GetDataUInt32("sec");
+			dst.sec = src.GetDataInt32("sec");
 			dst.nanosec = src.GetDataUInt32("nanosec");
+        }
+        static private void ConvertToMessage(IPduReadOperation src, TransformMsg dst)
+        {
+            ConvertToMessage(src.Ref("translation").GetPduReadOps(), dst.translation);
+            ConvertToMessage(src.Ref("rotation").GetPduReadOps(), dst.rotation);
         }
         static private void ConvertToMessage(IPduReadOperation src, TwistMsg dst)
         {
             ConvertToMessage(src.Ref("linear").GetPduReadOps(), dst.linear);
             ConvertToMessage(src.Ref("angular").GetPduReadOps(), dst.angular);
+        }
+        static private void ConvertToMessage(IPduReadOperation src, TwistWithCovarianceMsg dst)
+        {
+            ConvertToMessage(src.Ref("twist").GetPduReadOps(), dst.twist);
+			dst.covariance = src.GetDataFloat64Array("covariance");
         }
         static private void ConvertToMessage(IPduReadOperation src, Vector3Msg dst)
         {
@@ -177,6 +211,12 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
             if (type.Equals("Imu"))
             {
             	ImuMsg ros_topic = new ImuMsg();
+                ConvertToMessage(src, ros_topic);
+                return ros_topic;
+            }
+            if (type.Equals("Odometry"))
+            {
+            	OdometryMsg ros_topic = new OdometryMsg();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }

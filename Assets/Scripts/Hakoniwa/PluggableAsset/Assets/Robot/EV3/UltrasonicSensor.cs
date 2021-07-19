@@ -6,7 +6,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
 {
     public class UltrasonicSensor : MonoBehaviour, IRobotUltraSonicSensor
     {
-        public static bool is_debug = false;
+        public static bool is_debug = true;
         private float contact_distance = 250f; /* cm */
         public float distanceValue; /* cm */
         private GameObject frontSensor;

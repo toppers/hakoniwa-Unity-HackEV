@@ -1,4 +1,6 @@
-﻿using Hakoniwa.Core.Utils;
+﻿using Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot;
+using Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot.TB3;
+using Hakoniwa.Core.Utils;
 using Hakoniwa.PluggableAsset.Assets.Robot;
 using Hakoniwa.PluggableAsset.Communication.Pdu;
 using System.Collections;
@@ -31,11 +33,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         }
         public void UpdateSensorData(Pdu pdu)
         {
-            long t = UtilTime.GetUnixTime();
-            uint t_sec = (uint)((long)(t / 1000000));
-            uint t_nsec = (uint)((long)(t % 1000000)) * 1000;
-            pdu.Ref("header").Ref("stamp").SetData("sec", t_sec);
-            pdu.Ref("header").Ref("stamp").SetData("nanosec", t_nsec);
+            TimeStamp.Set(pdu);
             pdu.Ref("header").SetData("frame_id", "laser");
 
             pdu.SetData("angle_min", angle_min);

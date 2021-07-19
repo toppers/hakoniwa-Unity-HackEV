@@ -26,7 +26,6 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
 
         private void ConvertToPdu(HeaderMsg src, IPduWriteOperation dst)
         {
-            dst.SetData("seq", src.seq);
 			ConvertToPdu(src.stamp, dst.Ref("stamp").GetPduWriteOps());
             dst.SetData("frame_id", src.frame_id);
         }

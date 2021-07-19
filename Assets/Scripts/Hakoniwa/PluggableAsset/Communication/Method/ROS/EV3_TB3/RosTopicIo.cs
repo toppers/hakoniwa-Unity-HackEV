@@ -6,17 +6,11 @@ using System.Collections.Generic;
 using Unity.Robotics.ROSTCPConnector;
 using UnityEngine;
 using System;
-using RosMessageTypes.Ev3;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
-using RosMessageTypes.Geometry;
-using RosMessageTypes.Sensor;
 using Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3;
 using System.IO;
 using Newtonsoft.Json;
-using Hakoniwa.Core.Utils.Logger;
-using RosMessageTypes.BuiltinInterfaces;
-
-namespace Hakoniwa.PluggableAsset.Communication.Method.ROS.EV3_TB3
+using Hakoniwa.Core.Utils.Logger;using RosMessageTypes.BuiltinInterfaces;using RosMessageTypes.Geometry;using RosMessageTypes.Nav;using RosMessageTypes.Sensor;using RosMessageTypes.Std;using RosMessageTypes.Ev3;namespace Hakoniwa.PluggableAsset.Communication.Method.ROS.EV3_TB3
 {
     [System.Serializable]
     public class UnityRosParameter
@@ -73,6 +67,7 @@ namespace Hakoniwa.PluggableAsset.Communication.Method.ROS.EV3_TB3
             ros.Subscribe<Ev3PduActuatorMsg>("ev3_actuator", Ev3PduActuatorMsgChange);
 			ros.RegisterPublisher<LaserScanMsg>("scan");
 			ros.RegisterPublisher<ImuMsg>("imu");
+			ros.RegisterPublisher<OdometryMsg>("odom");
             ros.Subscribe<TwistMsg>("cmd_vel", TwistMsgChange);
 
         }

@@ -26,7 +26,6 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
 
         static private void ConvertToMessage(IPduReadOperation src, HeaderMsg dst)
         {
-			dst.seq = src.GetDataUInt32("seq");
             ConvertToMessage(src.Ref("stamp").GetPduReadOps(), dst.stamp);
 			dst.frame_id = src.GetDataString("frame_id");
         }
@@ -62,7 +61,7 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
         }
         static private void ConvertToMessage(IPduReadOperation src, TimeMsg dst)
         {
-			dst.sec = src.GetDataUInt32("sec");
+			dst.sec = src.GetDataInt32("sec");
 			dst.nanosec = src.GetDataUInt32("nanosec");
         }
         static private void ConvertToMessage(IPduReadOperation src, TwistMsg dst)

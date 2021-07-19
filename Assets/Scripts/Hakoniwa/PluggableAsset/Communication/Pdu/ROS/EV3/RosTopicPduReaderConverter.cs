@@ -26,7 +26,7 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3
 
         private void ConvertToPdu(Ev3PduActuatorMsg src, IPduWriteOperation dst)
         {
-			ConvertToPdu(src.header, dst.Ref("header").GetPduWriteOps());
+			ConvertToPdu(src.head, dst.Ref("head").GetPduWriteOps());
             dst.SetData("leds", src.leds);
             foreach (var e in dst.Refs("motors"))
             {
@@ -62,7 +62,7 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3
         }
         private void ConvertToPdu(Ev3PduSensorMsg src, IPduWriteOperation dst)
         {
-			ConvertToPdu(src.header, dst.Ref("header").GetPduWriteOps());
+			ConvertToPdu(src.head, dst.Ref("head").GetPduWriteOps());
             dst.SetData("buttons", src.buttons);
             foreach (var e in dst.Refs("color_sensors"))
             {

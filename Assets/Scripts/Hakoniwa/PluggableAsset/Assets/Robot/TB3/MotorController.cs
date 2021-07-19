@@ -1,4 +1,5 @@
 ﻿using Hakoniwa.PluggableAsset.Communication.Pdu;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,10 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
 {
     public class MotorController
     {
-        private Motor[] motors = new Motor[2]; // 0: R, 1: L
+        private Motor[] motors = new Motor[2];      // 0: R, 1: L
+        private float[] prev_angle = new float[2];  // 0: R, 1: L
+        private float[] delta_angle = new float[2];  // 0: R, 1: L
+        private float[] moving_distance = new float[2];  // 0: R, 1: L
         private int motor_power = 150;
         private float motor_interval_distance = 0.16f; // 16cm
         private IPduReader pdu_reader;
@@ -33,7 +37,14 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
 
         public void CopySensingDataToPdu()
         {
-            //TODO
+            for (int i = 0; i < 2; i++)
+            {
+                var angle = motors[i].GetDegree();
+                this.delta_angle[i] = angle - this.prev_angle[i];
+                this.prev_angle[i] = angle;
+
+                this.moving_distance[i] = ((Mathf.Deg2Rad * this.delta_angle[i]) / Mathf.PI) * motors[i].GetRadius();
+            }
         }
         public void DoActuation()
         {
@@ -49,6 +60,11 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
             // V_L(左車輪の目標速度) = V(目標速度) - d × ω(目標角速度)
             motors[0].SetTargetVelicty((float)(target_velocity + motor_interval_distance * target_rotation_angle_rate));
             motors[1].SetTargetVelicty((float)(target_velocity - motor_interval_distance * target_rotation_angle_rate));
+        }
+
+        internal float GetDeltaMovingDistance()
+        {
+            return (this.moving_distance[0] + this.moving_distance[1]) / 2.0f;
         }
     }
 }

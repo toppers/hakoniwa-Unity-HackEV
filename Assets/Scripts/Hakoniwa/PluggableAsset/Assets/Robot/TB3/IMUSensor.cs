@@ -14,6 +14,8 @@ namespace Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot.TB3
         private float deltaTime;
         private Vector3 prev_velocity = Vector3.zero;
         private Rigidbody my_rigidbody;
+        private Vector3 prev_angle = Vector3.zero;
+        private Vector3 delta_angle = Vector3.zero;
 
         public void Initialize(object root)
         {
@@ -35,11 +37,24 @@ namespace Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot.TB3
             pdu.Ref("angular_velocity").SetData("y", (double)-my_rigidbody.angularVelocity.x);
             pdu.Ref("angular_velocity").SetData("z", (double)my_rigidbody.angularVelocity.y);
         }
+
+        internal Vector3 GetCurrentEulerAngle()
+        {
+            return this.sensor.transform.rotation.eulerAngles;
+        }
+
+        internal Vector3 GetDeltaEulerAngle()
+        {
+            return this.delta_angle;
+        }
+
         private void UpdateLinearAcceleration(Pdu pdu)
         {
             Vector3 current_velocity = this.sensor.transform.InverseTransformDirection(my_rigidbody.velocity);
             Vector3 acceleration = (current_velocity - prev_velocity) / deltaTime;
-            prev_velocity = current_velocity;
+            this.prev_velocity = current_velocity;
+            this.delta_angle = this.GetCurrentEulerAngle() - prev_angle;
+            this.prev_angle = this.GetCurrentEulerAngle();
             //gravity element
             acceleration += transform.InverseTransformDirection(Physics.gravity);
 
@@ -50,11 +65,7 @@ namespace Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot.TB3
 
         public void UpdateSensorData(Pdu pdu)
         {
-            long t = UtilTime.GetUnixTime();
-            uint t_sec = (uint)((long)(t / 1000000));
-            uint t_nsec = (uint)((long)(t % 1000000)) * 1000;
-            pdu.Ref("header").Ref("stamp").SetData("sec", t_sec);
-            pdu.Ref("header").Ref("stamp").SetData("nanosec", t_nsec);
+            TimeStamp.Set(pdu);
             pdu.Ref("header").SetData("frame_id", "imu");
 
             //orientation
