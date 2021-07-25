@@ -5,13 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RosMessageTypes.Std;
-using RosMessageTypes.Ev3;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
-using RosMessageTypes.Geometry;
-using RosMessageTypes.Sensor;
 using Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3;
+
 using RosMessageTypes.BuiltinInterfaces;
+using RosMessageTypes.Ev3;
 
 namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3
 {
@@ -99,6 +97,11 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3
         {
             dst.SetData("value", src.value);
         }
+        private void ConvertToPdu(TimeMsg src, IPduWriteOperation dst)
+        {
+            dst.SetData("sec", src.sec);
+            dst.SetData("nanosec", src.nanosec);
+        }
 
         public void ConvertToPduData(IPduCommData src, IPduReader dst)
         {
@@ -106,13 +109,13 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3
 
             RosTopicPduReader ros_pdu_reader = dst as RosTopicPduReader;
 
-            if (ros_pdu_reader.GetTypeName().Equals("Ev3PduSensor"))
+            if (ros_pdu_reader.GetTypeName().Equals("ev3_msgs/Ev3PduSensor"))
             {
                 var ros_topic_data = ros_topic.GetTopicData() as Ev3PduSensorMsg;
                 ConvertToPdu(ros_topic_data, dst.GetWriteOps());
                 return;
             }
-            if (ros_pdu_reader.GetTypeName().Equals("Ev3PduActuator"))
+            if (ros_pdu_reader.GetTypeName().Equals("ev3_msgs/Ev3PduActuator"))
             {
                 var ros_topic_data = ros_topic.GetTopicData() as Ev3PduActuatorMsg;
                 ConvertToPdu(ros_topic_data, dst.GetWriteOps());

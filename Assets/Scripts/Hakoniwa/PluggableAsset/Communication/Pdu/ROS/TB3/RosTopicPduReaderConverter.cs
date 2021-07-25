@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RosMessageTypes.Std;
-using RosMessageTypes.Ev3;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
+using Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3;
+
+using RosMessageTypes.BuiltinInterfaces;
 using RosMessageTypes.Geometry;
 using RosMessageTypes.Sensor;
-using Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3;
-using RosMessageTypes.BuiltinInterfaces;
+using RosMessageTypes.Std;
 
 namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
 {
@@ -26,6 +26,7 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
 
         private void ConvertToPdu(HeaderMsg src, IPduWriteOperation dst)
         {
+            dst.SetData("seq", src.seq);
 			ConvertToPdu(src.stamp, dst.Ref("stamp").GetPduWriteOps());
             dst.SetData("frame_id", src.frame_id);
         }
@@ -82,19 +83,19 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
 
             RosTopicPduReader ros_pdu_reader = dst as RosTopicPduReader;
 
-            if (ros_pdu_reader.GetTypeName().Equals("LaserScan"))
+            if (ros_pdu_reader.GetTypeName().Equals("sensor_msgs/LaserScan"))
             {
                 var ros_topic_data = ros_topic.GetTopicData() as LaserScanMsg;
                 ConvertToPdu(ros_topic_data, dst.GetWriteOps());
                 return;
             }
-            if (ros_pdu_reader.GetTypeName().Equals("Imu"))
+            if (ros_pdu_reader.GetTypeName().Equals("sensor_msgs/Imu"))
             {
                 var ros_topic_data = ros_topic.GetTopicData() as ImuMsg;
                 ConvertToPdu(ros_topic_data, dst.GetWriteOps());
                 return;
             }
-            if (ros_pdu_reader.GetTypeName().Equals("Twist"))
+            if (ros_pdu_reader.GetTypeName().Equals("geometry_msgs/Twist"))
             {
                 var ros_topic_data = ros_topic.GetTopicData() as TwistMsg;
                 ConvertToPdu(ros_topic_data, dst.GetWriteOps());

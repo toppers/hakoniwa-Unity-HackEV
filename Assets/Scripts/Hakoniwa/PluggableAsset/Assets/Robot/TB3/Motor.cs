@@ -12,9 +12,9 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         private int motor_velocity_av_max = 10;
         private float motor_sum_degree = 0.0f;
         private float rotation_angle_rate = 0.0f;
-        private float motor_radius = 0.033f; //3.3cm
+        private float motor_radius = 3.3f; //3.3cm
 
-        private GameObject obj;
+        internal GameObject obj;
         private HingeJoint joint;
         private JointMotor motor;
         private float targetVelocity;

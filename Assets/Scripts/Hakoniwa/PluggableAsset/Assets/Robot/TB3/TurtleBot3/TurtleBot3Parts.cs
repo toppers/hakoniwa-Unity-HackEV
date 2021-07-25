@@ -12,7 +12,7 @@ public class TurtleBot3Parts : MonoBehaviour, ITB3Parts
 
     public string GetIMU()
     {
-        return "Phys/Axis";
+        return "Phys/Body";
     }
 
     public string GetLaserScan()

@@ -26,10 +26,10 @@ namespace Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot.TB3
 
         private void UpdateOrientation(Pdu pdu)
         {
-            pdu.Ref("orientation").SetData("x", (double)-this.sensor.transform.rotation.z);
-            pdu.Ref("orientation").SetData("y", (double)this.sensor.transform.rotation.x);
-            pdu.Ref("orientation").SetData("z", (double)-this.sensor.transform.rotation.y);
-            pdu.Ref("orientation").SetData("w", (double)this.sensor.transform.rotation.w);
+            pdu.Ref("orientation").SetData("x", (double)this.sensor.transform.rotation.z);
+            pdu.Ref("orientation").SetData("y", (double)-this.sensor.transform.rotation.x);
+            pdu.Ref("orientation").SetData("z", (double)this.sensor.transform.rotation.y);
+            pdu.Ref("orientation").SetData("w", (double)-this.sensor.transform.rotation.w);
         }
         private void UpdateAngularVelocity(Pdu pdu)
         {

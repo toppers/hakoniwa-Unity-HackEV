@@ -49,8 +49,8 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.EV3
             this.InitActuator();
             this.InitSensor();
             this.pdu_io = PduIoConnector.Get(this.GetName());
-            this.pdu_reader = this.pdu_io.GetReader(this.GetName() + "_Ev3ActuatorPdu");
-            this.pdu_writer = this.pdu_io.GetWriter(this.GetName() + "_Ev3SensorPdu");
+            this.pdu_reader = this.pdu_io.GetReader(this.GetName() + "_ev3_actuatorPdu");
+            this.pdu_writer = this.pdu_io.GetWriter(this.GetName() + "_ev3_sensorPdu");
         }
         public string GetName()
         {

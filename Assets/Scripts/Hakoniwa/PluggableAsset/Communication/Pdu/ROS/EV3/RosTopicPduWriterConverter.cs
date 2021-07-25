@@ -5,13 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RosMessageTypes.Std;
-using RosMessageTypes.Ev3;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
-using RosMessageTypes.Geometry;
-using RosMessageTypes.Sensor;
 using Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3;
+
 using RosMessageTypes.BuiltinInterfaces;
+using RosMessageTypes.Ev3;
 
 namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3
 {
@@ -28,6 +26,10 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3
         {
             ConvertToMessage(src.Ref("head").GetPduReadOps(), dst.head);
 			dst.leds = src.GetDataUInt8Array("leds");
+            if (dst.motors.Length < src.Refs("motors").Length)
+            {
+                dst.motors = new Ev3PduMotorMsg[src.Refs("motors").Length];
+            }
             foreach (var e in src.Refs("motors"))
             {
                 int index = Array.IndexOf(src.Refs("motors"), e);
@@ -64,6 +66,10 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3
         {
             ConvertToMessage(src.Ref("head").GetPduReadOps(), dst.head);
 			dst.buttons = src.GetDataUInt8Array("buttons");
+            if (dst.color_sensors.Length < src.Refs("color_sensors").Length)
+            {
+                dst.color_sensors = new Ev3PduColorSensorMsg[src.Refs("color_sensors").Length];
+            }
             foreach (var e in src.Refs("color_sensors"))
             {
                 int index = Array.IndexOf(src.Refs("color_sensors"), e);
@@ -71,6 +77,10 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3
                     dst.color_sensors[index] = new Ev3PduColorSensorMsg();
                 }
                 ConvertToMessage(e.GetPduReadOps(), dst.color_sensors[index]);
+            }
+            if (dst.touch_sensors.Length < src.Refs("touch_sensors").Length)
+            {
+                dst.touch_sensors = new Ev3PduTouchSensorMsg[src.Refs("touch_sensors").Length];
             }
             foreach (var e in src.Refs("touch_sensors"))
             {
@@ -99,18 +109,23 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3
         {
 			dst.value = src.GetDataUInt32("value");
         }
+        static private void ConvertToMessage(IPduReadOperation src, TimeMsg dst)
+        {
+			dst.sec = src.GetDataUInt32("sec");
+			dst.nanosec = src.GetDataUInt32("nanosec");
+        }
         
         
         static public Message ConvertToMessage(IPduReadOperation src, string type)
         {
 
-            if (type.Equals("Ev3PduSensor"))
+            if (type.Equals("ev3_msgs/Ev3PduSensor"))
             {
             	Ev3PduSensorMsg ros_topic = new Ev3PduSensorMsg();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }
-            if (type.Equals("Ev3PduActuator"))
+            if (type.Equals("ev3_msgs/Ev3PduActuator"))
             {
             	Ev3PduActuatorMsg ros_topic = new Ev3PduActuatorMsg();
                 ConvertToMessage(src, ros_topic);

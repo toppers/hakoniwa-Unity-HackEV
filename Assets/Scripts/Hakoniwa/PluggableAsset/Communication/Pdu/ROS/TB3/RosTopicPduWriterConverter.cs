@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RosMessageTypes.Std;
-using RosMessageTypes.Ev3;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
+using Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3;
+
+using RosMessageTypes.BuiltinInterfaces;
 using RosMessageTypes.Geometry;
 using RosMessageTypes.Sensor;
-using Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3;
-using RosMessageTypes.BuiltinInterfaces;
+using RosMessageTypes.Std;
 
 namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
 {
@@ -26,6 +26,7 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
 
         static private void ConvertToMessage(IPduReadOperation src, HeaderMsg dst)
         {
+			dst.seq = src.GetDataUInt32("seq");
             ConvertToMessage(src.Ref("stamp").GetPduReadOps(), dst.stamp);
 			dst.frame_id = src.GetDataString("frame_id");
         }
@@ -61,7 +62,7 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
         }
         static private void ConvertToMessage(IPduReadOperation src, TimeMsg dst)
         {
-			dst.sec = src.GetDataInt32("sec");
+			dst.sec = src.GetDataUInt32("sec");
 			dst.nanosec = src.GetDataUInt32("nanosec");
         }
         static private void ConvertToMessage(IPduReadOperation src, TwistMsg dst)
@@ -80,19 +81,19 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
         static public Message ConvertToMessage(IPduReadOperation src, string type)
         {
 
-            if (type.Equals("LaserScan"))
+            if (type.Equals("sensor_msgs/LaserScan"))
             {
             	LaserScanMsg ros_topic = new LaserScanMsg();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }
-            if (type.Equals("Imu"))
+            if (type.Equals("sensor_msgs/Imu"))
             {
             	ImuMsg ros_topic = new ImuMsg();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }
-            if (type.Equals("Twist"))
+            if (type.Equals("geometry_msgs/Twist"))
             {
             	TwistMsg ros_topic = new TwistMsg();
                 ConvertToMessage(src, ros_topic);

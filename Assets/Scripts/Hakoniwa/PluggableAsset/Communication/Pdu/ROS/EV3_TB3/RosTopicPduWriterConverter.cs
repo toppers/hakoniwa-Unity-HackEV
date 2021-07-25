@@ -9,11 +9,12 @@ using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 using Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3;
 
 using RosMessageTypes.BuiltinInterfaces;
+using RosMessageTypes.Ev3;
 using RosMessageTypes.Geometry;
 using RosMessageTypes.Nav;
 using RosMessageTypes.Sensor;
 using RosMessageTypes.Std;
-using RosMessageTypes.Ev3;
+using RosMessageTypes.Tf2;
 
 namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
 {
@@ -30,6 +31,10 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
         {
             ConvertToMessage(src.Ref("head").GetPduReadOps(), dst.head);
 			dst.leds = src.GetDataUInt8Array("leds");
+            if (dst.motors.Length < src.Refs("motors").Length)
+            {
+                dst.motors = new Ev3PduMotorMsg[src.Refs("motors").Length];
+            }
             foreach (var e in src.Refs("motors"))
             {
                 int index = Array.IndexOf(src.Refs("motors"), e);
@@ -66,6 +71,10 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
         {
             ConvertToMessage(src.Ref("head").GetPduReadOps(), dst.head);
 			dst.buttons = src.GetDataUInt8Array("buttons");
+            if (dst.color_sensors.Length < src.Refs("color_sensors").Length)
+            {
+                dst.color_sensors = new Ev3PduColorSensorMsg[src.Refs("color_sensors").Length];
+            }
             foreach (var e in src.Refs("color_sensors"))
             {
                 int index = Array.IndexOf(src.Refs("color_sensors"), e);
@@ -73,6 +82,10 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
                     dst.color_sensors[index] = new Ev3PduColorSensorMsg();
                 }
                 ConvertToMessage(e.GetPduReadOps(), dst.color_sensors[index]);
+            }
+            if (dst.touch_sensors.Length < src.Refs("touch_sensors").Length)
+            {
+                dst.touch_sensors = new Ev3PduTouchSensorMsg[src.Refs("touch_sensors").Length];
             }
             foreach (var e in src.Refs("touch_sensors"))
             {
@@ -103,6 +116,7 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
         }
         static private void ConvertToMessage(IPduReadOperation src, HeaderMsg dst)
         {
+			dst.seq = src.GetDataUInt32("seq");
             ConvertToMessage(src.Ref("stamp").GetPduReadOps(), dst.stamp);
 			dst.frame_id = src.GetDataString("frame_id");
         }
@@ -159,15 +173,36 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
 			dst.z = src.GetDataFloat64("z");
 			dst.w = src.GetDataFloat64("w");
         }
+        static private void ConvertToMessage(IPduReadOperation src, TFMessageMsg dst)
+        {
+            if (dst.transforms.Length < src.Refs("transforms").Length)
+            {
+                dst.transforms = new TransformStampedMsg[src.Refs("transforms").Length];
+            }
+            foreach (var e in src.Refs("transforms"))
+            {
+                int index = Array.IndexOf(src.Refs("transforms"), e);
+                if (dst.transforms[index] == null) {
+                    dst.transforms[index] = new TransformStampedMsg();
+                }
+                ConvertToMessage(e.GetPduReadOps(), dst.transforms[index]);
+            }
+        }
         static private void ConvertToMessage(IPduReadOperation src, TimeMsg dst)
         {
-			dst.sec = src.GetDataInt32("sec");
+			dst.sec = src.GetDataUInt32("sec");
 			dst.nanosec = src.GetDataUInt32("nanosec");
         }
         static private void ConvertToMessage(IPduReadOperation src, TransformMsg dst)
         {
             ConvertToMessage(src.Ref("translation").GetPduReadOps(), dst.translation);
             ConvertToMessage(src.Ref("rotation").GetPduReadOps(), dst.rotation);
+        }
+        static private void ConvertToMessage(IPduReadOperation src, TransformStampedMsg dst)
+        {
+            ConvertToMessage(src.Ref("header").GetPduReadOps(), dst.header);
+			dst.child_frame_id = src.GetDataString("child_frame_id");
+            ConvertToMessage(src.Ref("transform").GetPduReadOps(), dst.transform);
         }
         static private void ConvertToMessage(IPduReadOperation src, TwistMsg dst)
         {
@@ -190,37 +225,43 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
         static public Message ConvertToMessage(IPduReadOperation src, string type)
         {
 
-            if (type.Equals("Ev3PduSensor"))
+            if (type.Equals("ev3_msgs/Ev3PduSensor"))
             {
             	Ev3PduSensorMsg ros_topic = new Ev3PduSensorMsg();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }
-            if (type.Equals("Ev3PduActuator"))
+            if (type.Equals("ev3_msgs/Ev3PduActuator"))
             {
             	Ev3PduActuatorMsg ros_topic = new Ev3PduActuatorMsg();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }
-            if (type.Equals("LaserScan"))
+            if (type.Equals("sensor_msgs/LaserScan"))
             {
             	LaserScanMsg ros_topic = new LaserScanMsg();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }
-            if (type.Equals("Imu"))
+            if (type.Equals("sensor_msgs/Imu"))
             {
             	ImuMsg ros_topic = new ImuMsg();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }
-            if (type.Equals("Odometry"))
+            if (type.Equals("nav_msgs/Odometry"))
             {
             	OdometryMsg ros_topic = new OdometryMsg();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }
-            if (type.Equals("Twist"))
+            if (type.Equals("tf2_msgs/TFMessage"))
+            {
+            	TFMessageMsg ros_topic = new TFMessageMsg();
+                ConvertToMessage(src, ros_topic);
+                return ros_topic;
+            }
+            if (type.Equals("geometry_msgs/Twist"))
             {
             	TwistMsg ros_topic = new TwistMsg();
                 ConvertToMessage(src, ros_topic);

@@ -8,12 +8,12 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
 {
     public class MotorController
     {
-        private Motor[] motors = new Motor[2];      // 0: R, 1: L
+        internal Motor[] motors = new Motor[2];      // 0: R, 1: L
         private float[] prev_angle = new float[2];  // 0: R, 1: L
         private float[] delta_angle = new float[2];  // 0: R, 1: L
         private float[] moving_distance = new float[2];  // 0: R, 1: L
         private int motor_power = 150;
-        private float motor_interval_distance = 0.16f; // 16cm
+        private float motor_interval_distance = 16.0f; // 16cm
         private IPduReader pdu_reader;
 
         public void Initialize(GameObject root, Transform transform, ITB3Parts parts, IPduReader pdu_reader)
@@ -39,11 +39,14 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         {
             for (int i = 0; i < 2; i++)
             {
+                this.motors[i].UpdateSensorValues();
                 var angle = motors[i].GetDegree();
                 this.delta_angle[i] = angle - this.prev_angle[i];
                 this.prev_angle[i] = angle;
 
                 this.moving_distance[i] = ((Mathf.Deg2Rad * this.delta_angle[i]) / Mathf.PI) * motors[i].GetRadius();
+                //Debug.Log("d[" + i + "]=" + this.moving_distance[i]);
+                //Debug.Log("delta_angle[" + i + "]=" + this.delta_angle[i]);
             }
         }
         public void DoActuation()
@@ -64,7 +67,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
 
         internal float GetDeltaMovingDistance()
         {
-            return (this.moving_distance[0] + this.moving_distance[1]) / 2.0f;
+            return ((this.moving_distance[0] + this.moving_distance[1]) / 2.0f);
         }
     }
 }
