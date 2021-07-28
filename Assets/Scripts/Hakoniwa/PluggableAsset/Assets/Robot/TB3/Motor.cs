@@ -7,7 +7,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
 {
     public class Motor : MonoBehaviour
     {
-        private float power_const = 300;
+        private float power_const = 100;
         private int motor_velocity_av_count = 0;
         private int motor_velocity_av_max = 10;
         private float motor_sum_degree = 0.0f;
@@ -20,10 +20,12 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         private float targetVelocity;
         private int force;
         private bool isStop;
-        private Quaternion prevRotation;
         private float deg;
         private Rigidbody rigid_body;
-        private float deltaTime;
+        private Quaternion current_angle;
+        private Quaternion prev_angle;
+        private Quaternion diff_angle;
+        private float angle_velocity;
 
         public float GetRadius()
         {
@@ -34,29 +36,17 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         {
             this.obj = (GameObject)root;
             this.rigid_body = this.obj.GetComponent<Rigidbody>();
-            this.deltaTime = Time.fixedDeltaTime;
             this.isStop = false;
             this.joint = this.obj.GetComponent<HingeJoint>();
-            this.prevRotation = this.obj.transform.localRotation;
         }
         public float GetVelocity()
         {
             return (this.motor_radius * this.rotation_angle_rate);
         }
 
-        private void CalcVelocity(float diff_degree)
+        public float GetCurrentAngleVelocity()
         {
-            this.motor_sum_degree += diff_degree;
-            if (this.motor_velocity_av_count >= this.motor_velocity_av_max)
-            {
-                this.rotation_angle_rate = this.motor_sum_degree / (this.deltaTime * this.motor_velocity_av_max);
-                this.motor_velocity_av_count = 0;
-            }
-            else
-            {
-                this.motor_velocity_av_count++;
-            }
-
+            return this.angle_velocity;
         }
 
         public void SetForce(int force)
@@ -128,12 +118,33 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
 
         public void UpdateSensorValues()
         {
-            float diff;
-            var diff_rot = this.obj.transform.localRotation * Quaternion.Inverse(this.prevRotation);
-            diff = Map360To180(diff_rot.eulerAngles.x);
-            this.prevRotation = this.obj.transform.localRotation;
-            this.deg += diff;
-            this.CalcVelocity(diff);
+            //float diff;
+            //var diff_rot = this.obj.transform.localRotation * Quaternion.Inverse(this.prevRotation);
+            //diff = Map360To180(diff_rot.eulerAngles.y);
+            //this.prevRotation = this.obj.transform.localRotation;
+            //this.deg += diff;
+
+            this.current_angle = obj.transform.localRotation;
+            this.diff_angle = current_angle * Quaternion.Inverse(this.prev_angle);
+
+            //this.diff_angle = (this.current_angle - this.prev_angle);
+            this.deg += Map360To180(this.diff_angle.eulerAngles.y);
+
+            this.angle_velocity = this.diff_angle.eulerAngles.y / Time.fixedDeltaTime;
+            this.prev_angle = this.current_angle;
+        }
+        public float GetCurrentAngle()
+        {
+            return -obj.transform.localRotation.eulerAngles.y;
+        }
+
+        public float GetDeltaAngle()
+        {
+            return Map360To180(diff_angle.eulerAngles.y);
+        }
+        public Vector3 GetDeltaEulerAngle()
+        {
+            return diff_angle.eulerAngles;
         }
     }
 }

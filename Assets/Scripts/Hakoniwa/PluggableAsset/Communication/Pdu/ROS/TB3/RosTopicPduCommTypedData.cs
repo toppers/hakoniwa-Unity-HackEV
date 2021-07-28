@@ -10,8 +10,10 @@ using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 
 using RosMessageTypes.BuiltinInterfaces;
 using RosMessageTypes.Geometry;
+using RosMessageTypes.Nav;
 using RosMessageTypes.Sensor;
 using RosMessageTypes.Std;
+using RosMessageTypes.Tf2;
 
 namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.TB3
 {

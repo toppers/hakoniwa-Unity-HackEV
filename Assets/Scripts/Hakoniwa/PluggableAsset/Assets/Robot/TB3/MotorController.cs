@@ -8,13 +8,22 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
 {
     public class MotorController
     {
-        internal Motor[] motors = new Motor[2];      // 0: R, 1: L
+        private Motor[] motors = new Motor[2];      // 0: R, 1: L
         private float[] prev_angle = new float[2];  // 0: R, 1: L
         private float[] delta_angle = new float[2];  // 0: R, 1: L
         private float[] moving_distance = new float[2];  // 0: R, 1: L
-        private int motor_power = 150;
+        private int motor_power = 10;
         private float motor_interval_distance = 16.0f; // 16cm
         private IPduReader pdu_reader;
+
+        internal Motor GetRightMotor()
+        {
+            return motors[0];
+        }
+        internal Motor GetLeftMotor()
+        {
+            return motors[1];
+        }
 
         public void Initialize(GameObject root, Transform transform, ITB3Parts parts, IPduReader pdu_reader)
         {

@@ -14,8 +14,10 @@ using Hakoniwa.Core.Utils.Logger;
 
 using RosMessageTypes.BuiltinInterfaces;
 using RosMessageTypes.Geometry;
+using RosMessageTypes.Nav;
 using RosMessageTypes.Sensor;
 using RosMessageTypes.Std;
+using RosMessageTypes.Tf2;
 
 namespace Hakoniwa.PluggableAsset.Communication.Method.ROS.TB3
 {
@@ -72,6 +74,9 @@ namespace Hakoniwa.PluggableAsset.Communication.Method.ROS.TB3
 
 			ros.RegisterPublisher<LaserScanMsg>("scan");
 			ros.RegisterPublisher<ImuMsg>("imu");
+			ros.RegisterPublisher<OdometryMsg>("odom");
+			ros.RegisterPublisher<TFMessageMsg>("tf");
+			ros.RegisterPublisher<JointStateMsg>("joint_states");
             ros.Subscribe<TwistMsg>("cmd_vel", TwistMsgChange);
 
         }

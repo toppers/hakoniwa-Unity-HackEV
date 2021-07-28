@@ -42,6 +42,14 @@ namespace Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot.TB3
         {
             return this.sensor.transform.rotation.eulerAngles;
         }
+        internal Quaternion GetCurrentAngle()
+        {
+            return this.sensor.transform.rotation;
+        }
+        internal Quaternion GetCurrentLocalAngle()
+        {
+            return this.sensor.transform.localRotation;
+        }
 
         internal Vector3 GetDeltaEulerAngle()
         {
