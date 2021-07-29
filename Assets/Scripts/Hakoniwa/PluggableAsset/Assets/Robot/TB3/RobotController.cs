@@ -200,6 +200,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         public void DoActuation()
         {
             this.motor_controller.DoActuation();
+            //Physics.SyncTransforms();
         }
 
         public string GetName()

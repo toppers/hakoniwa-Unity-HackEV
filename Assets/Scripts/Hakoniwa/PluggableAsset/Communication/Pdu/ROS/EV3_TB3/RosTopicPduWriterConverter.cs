@@ -130,6 +130,14 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
             ConvertToMessage(src.Ref("linear_acceleration").GetPduReadOps(), dst.linear_acceleration);
 			dst.linear_acceleration_covariance = src.GetDataFloat64Array("linear_acceleration_covariance");
         }
+        static private void ConvertToMessage(IPduReadOperation src, JointStateMsg dst)
+        {
+            ConvertToMessage(src.Ref("header").GetPduReadOps(), dst.header);
+			dst.name = src.GetDataStringArray("name");
+			dst.position = src.GetDataFloat64Array("position");
+			dst.velocity = src.GetDataFloat64Array("velocity");
+			dst.effort = src.GetDataFloat64Array("effort");
+        }
         static private void ConvertToMessage(IPduReadOperation src, LaserScanMsg dst)
         {
             ConvertToMessage(src.Ref("header").GetPduReadOps(), dst.header);
@@ -258,6 +266,12 @@ namespace Hakoniwa.PluggableAsset.Communication.Pdu.ROS.EV3_TB3
             if (type.Equals("tf2_msgs/TFMessage"))
             {
             	TFMessageMsg ros_topic = new TFMessageMsg();
+                ConvertToMessage(src, ros_topic);
+                return ros_topic;
+            }
+            if (type.Equals("sensor_msgs/JointState"))
+            {
+            	JointStateMsg ros_topic = new JointStateMsg();
                 ConvertToMessage(src, ros_topic);
                 return ros_topic;
             }

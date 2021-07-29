@@ -12,7 +12,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         private float[] prev_angle = new float[2];  // 0: R, 1: L
         private float[] delta_angle = new float[2];  // 0: R, 1: L
         private float[] moving_distance = new float[2];  // 0: R, 1: L
-        private int motor_power = 10;
+        private int motor_power = 500;
         private float motor_interval_distance = 16.0f; // 16cm
         private IPduReader pdu_reader;
 

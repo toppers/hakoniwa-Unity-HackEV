@@ -79,6 +79,7 @@ namespace Hakoniwa.PluggableAsset.Communication.Method.ROS.EV3_TB3
 			ros.RegisterPublisher<ImuMsg>("imu");
 			ros.RegisterPublisher<OdometryMsg>("odom");
 			ros.RegisterPublisher<TFMessageMsg>("tf");
+			ros.RegisterPublisher<JointStateMsg>("joint_states");
             ros.Subscribe<TwistMsg>("cmd_vel", TwistMsgChange);
 
         }

@@ -34,7 +34,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         public void UpdateSensorData(Pdu pdu)
         {
             TimeStamp.Set(pdu);
-            pdu.Ref("header").SetData("frame_id", "laser");
+            pdu.Ref("header").SetData("frame_id", "base_scan");
 
             pdu.SetData("angle_min", angle_min);
             pdu.SetData("angle_max", angle_max);

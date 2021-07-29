@@ -7,7 +7,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
 {
     public class Motor : MonoBehaviour
     {
-        private float power_const = 100;
+        private float power_const = 1000;
         private int motor_velocity_av_count = 0;
         private int motor_velocity_av_max = 10;
         private float motor_sum_degree = 0.0f;
