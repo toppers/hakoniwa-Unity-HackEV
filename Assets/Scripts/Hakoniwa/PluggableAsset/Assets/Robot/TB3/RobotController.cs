@@ -11,6 +11,7 @@ using Hakoniwa.PluggableAsset.Communication.Pdu;
 using Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot.TB3;
 using Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot;
 using Hakoniwa.Core.Utils;
+using Hakoniwa.PluggableAsset.Communication.Pdu.Accessor;
 
 namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
 {
@@ -23,7 +24,9 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         private PduIoConnector pdu_io;
         private IPduWriter pdu_laser_scan;
         private IPduWriter pdu_imu;
+        private ImuAccessor pdu_imu_accessor;
         private IPduWriter pdu_odometry;
+        private OdometryAccessor pdu_odometry_accessor;
         private IPduWriter pdu_tf;
         private IPduWriter pdu_joint_state;
         private IPduReader pdu_motor_control;
@@ -174,27 +177,42 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
              */
             //header
             TimeStamp.Set(this.pdu_odometry.GetWriteOps().Ref(null));
-            this.pdu_odometry.GetWriteOps().Ref("header").SetData("frame_id", "/odom");
+            //this.pdu_odometry.GetWriteOps().Ref("header").SetData("frame_id", "/odom");
+            this.pdu_odometry_accessor.header.frame_id = "/odom";
 
             //child_frame_id
-            this.pdu_odometry.GetWriteOps().SetData("child_frame_id", "/base_footprint");
+            //this.pdu_odometry.GetWriteOps().SetData("child_frame_id", "/base_footprint");
+            this.pdu_odometry_accessor.child_frame_id = "/base_footprint";
+
             //pose.pose.position
-            this.pdu_odometry.GetWriteOps().Ref("pose").Ref("pose").Ref("position").SetData("x", (double)current_pos.x);
-            this.pdu_odometry.GetWriteOps().Ref("pose").Ref("pose").Ref("position").SetData("y", (double)current_pos.y);
-            this.pdu_odometry.GetWriteOps().Ref("pose").Ref("pose").Ref("position").SetData("z", (double)current_pos.z);
+            //this.pdu_odometry.GetWriteOps().Ref("pose").Ref("pose").Ref("position").SetData("x", (double)current_pos.x);
+            //this.pdu_odometry.GetWriteOps().Ref("pose").Ref("pose").Ref("position").SetData("y", (double)current_pos.y);
+            //this.pdu_odometry.GetWriteOps().Ref("pose").Ref("pose").Ref("position").SetData("z", (double)current_pos.z);
+            this.pdu_odometry_accessor.pose.pose.position.x = current_pos.x;
+            this.pdu_odometry_accessor.pose.pose.position.y = current_pos.y;
+            this.pdu_odometry_accessor.pose.pose.position.z = current_pos.z;
 
             //pose.pose.orientation
-            this.pdu_odometry.GetWriteOps().Ref("pose").Ref("pose").SetData("orientation", 
-                this.pdu_imu.GetReadOps().Ref("orientation"));
+            //this.pdu_odometry.GetWriteOps().Ref("pose").Ref("pose").SetData("orientation", 
+            //    this.pdu_imu.GetReadOps().Ref("orientation"));
+            this.pdu_odometry_accessor.pose.pose.orientation = this.pdu_imu_accessor.orientation;
 
             //twist.twist.linear
-            this.pdu_odometry.GetWriteOps().Ref("twist").Ref("twist").Ref("linear").SetData("x", (double)delta_pos.x / Time.fixedDeltaTime);
-            this.pdu_odometry.GetWriteOps().Ref("twist").Ref("twist").Ref("linear").SetData("y", (double)delta_pos.y / Time.fixedDeltaTime);
-            this.pdu_odometry.GetWriteOps().Ref("twist").Ref("twist").Ref("linear").SetData("z", (double)delta_pos.z / Time.fixedDeltaTime);
+            //this.pdu_odometry.GetWriteOps().Ref("twist").Ref("twist").Ref("linear").SetData("x", (double)delta_pos.x / Time.fixedDeltaTime);
+            //this.pdu_odometry.GetWriteOps().Ref("twist").Ref("twist").Ref("linear").SetData("y", (double)delta_pos.y / Time.fixedDeltaTime);
+            //this.pdu_odometry.GetWriteOps().Ref("twist").Ref("twist").Ref("linear").SetData("z", (double)delta_pos.z / Time.fixedDeltaTime);
+            this.pdu_odometry_accessor.twist.twist.linear.x = delta_pos.x / Time.fixedDeltaTime;
+            this.pdu_odometry_accessor.twist.twist.linear.y = delta_pos.y / Time.fixedDeltaTime;
+            this.pdu_odometry_accessor.twist.twist.linear.z = delta_pos.z / Time.fixedDeltaTime;
+
+
             //twist.twist.angular
-            this.pdu_odometry.GetWriteOps().Ref("twist").Ref("twist").Ref("angular").SetData("x", (double)delta_angle.x / Time.fixedDeltaTime);
-            this.pdu_odometry.GetWriteOps().Ref("twist").Ref("twist").Ref("angular").SetData("y", (double)delta_angle.y / Time.fixedDeltaTime);
-            this.pdu_odometry.GetWriteOps().Ref("twist").Ref("twist").Ref("angular").SetData("z", (double)delta_angle.z / Time.fixedDeltaTime);
+            //this.pdu_odometry.GetWriteOps().Ref("twist").Ref("twist").Ref("angular").SetData("x", (double)delta_angle.x / Time.fixedDeltaTime);
+            //this.pdu_odometry.GetWriteOps().Ref("twist").Ref("twist").Ref("angular").SetData("y", (double)delta_angle.y / Time.fixedDeltaTime);
+            //this.pdu_odometry.GetWriteOps().Ref("twist").Ref("twist").Ref("angular").SetData("z", (double)delta_angle.z / Time.fixedDeltaTime);
+            this.pdu_odometry_accessor.twist.twist.angular.x = delta_angle.x / Time.fixedDeltaTime;
+            this.pdu_odometry_accessor.twist.twist.angular.y = delta_angle.y / Time.fixedDeltaTime;
+            this.pdu_odometry_accessor.twist.twist.angular.z = delta_angle.z / Time.fixedDeltaTime;
         }
 
         public void DoActuation()
@@ -250,11 +268,14 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
             {
                 throw new ArgumentException("can not found Imu pdu:" + this.GetName() + "_imuPdu");
             }
+            this.pdu_imu_accessor = new ImuAccessor(this.pdu_imu.GetReadOps().Ref(null));
             this.pdu_odometry = this.pdu_io.GetWriter(this.GetName() + "_odomPdu");
             if (this.pdu_odometry == null)
             {
                 throw new ArgumentException("can not found Imu pdu:" + this.GetName() + "_odomPdu");
             }
+            this.pdu_odometry_accessor = new OdometryAccessor(this.pdu_odometry.GetReadOps().Ref(null));
+
             this.pdu_tf = this.pdu_io.GetWriter(this.GetName() + "_tfPdu");
             if (this.pdu_tf == null)
             {

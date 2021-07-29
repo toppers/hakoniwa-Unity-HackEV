@@ -1,4 +1,5 @@
 ﻿using Hakoniwa.PluggableAsset.Communication.Pdu;
+using Hakoniwa.PluggableAsset.Communication.Pdu.Accessor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         private float[] moving_distance = new float[2];  // 0: R, 1: L
         private int motor_power = 500;
         private float motor_interval_distance = 16.0f; // 16cm
-        private IPduReader pdu_reader;
+        private TwistAccessor pdu_motor_control_accessor;
 
         internal Motor GetRightMotor()
         {
@@ -28,7 +29,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         public void Initialize(GameObject root, Transform transform, ITB3Parts parts, IPduReader pdu_reader)
         {
             GameObject obj;
-            this.pdu_reader = pdu_reader;
+            this.pdu_motor_control_accessor = new TwistAccessor(pdu_reader.GetReadOps().Ref(null));
 
             for (int i = 0; i < 2; i++)
             {
@@ -63,8 +64,10 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
             double target_velocity;
             double target_rotation_angle_rate;
 
-            target_velocity = this.pdu_reader.GetReadOps().Ref("linear").GetDataFloat64("x");
-            target_rotation_angle_rate = this.pdu_reader.GetReadOps().Ref("angular").GetDataFloat64("z");
+            //target_velocity = this.pdu_reader.GetReadOps().Ref("linear").GetDataFloat64("x");
+            //target_rotation_angle_rate = this.pdu_reader.GetReadOps().Ref("angular").GetDataFloat64("z");
+            target_velocity = this.pdu_motor_control_accessor.linear.x;
+            target_rotation_angle_rate = this.pdu_motor_control_accessor.angular.z;
 
             //Debug.Log("target_velocity=" + target_velocity);
             //Debug.Log("target_rotation_angle_rate=" + target_rotation_angle_rate);
