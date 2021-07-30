@@ -1,3 +1,5 @@
+**本リポジトリは[ toppers/hakoniwa-Unity-Package ](https://github.com/toppers/hakoniwa-Unity-Package)に移行しました** 
+
 # hakoniwa-Unity-HackEV
 
 箱庭向けHackEVのUnityアセットファイル  
